@@ -24,19 +24,18 @@ app.use(cors({
 app.use(express.json());
 
 // Rutas
-app.use('/api/libros', logActivity('viewed libros'), libroRoutes);
-app.use('/api/autores', logActivity('viewed autores'), autorRoutes);
-app.use('/api/usuarios', logActivity('viewed usuarios'), userRoutes);
-app.use('/api/editoriales', logActivity('viewed editoriales'), editorialRoutes);
-app.use('/api/categorias', logActivity('viewed categorias'), categoriaRoutes);
-app.use('/api/bitacora', bitacoraRoutes);
+app.use('/api', logActivity('viewed libros'), libroRoutes);
+app.use('/api', logActivity('viewed autores'), autorRoutes);
+app.use('/api', logActivity('viewed usuarios'), userRoutes);
+app.use('/api', logActivity('viewed editoriales'), editorialRoutes);
+app.use('/api', logActivity('viewed categorias'), categoriaRoutes);
+app.use('/api', bitacoraRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
-    res.send('Bienvenido a la API de Biblioteca');
+    res.send('juany ta gozu!');
 });
 
-// Iniciar servidor
 app.listen(port, () => {
-    console.log(`Servidor corriendo en el puerto ${port}`);
+    console.log(`Servidor corriendo en ${port}`);
 });
