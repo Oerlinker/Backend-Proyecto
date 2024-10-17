@@ -1,36 +1,42 @@
 const express = require('express');
 const cors = require('cors');
+const dotenv = require('dotenv');
+const pool = require('./db'); // Asumiendo que tienes un archivo `db.js` para la conexión a PostgreSQL
 const libroRoutes = require('./routes/libroRoutes');
 const autorRoutes = require('./routes/autorRoutes');
 const userRoutes = require('./routes/usuarioRoutes');
 const editorialRoutes = require('./routes/editorialRoutes');
 const categoriaRoutes = require('./routes/categoriRoutes');
-const logActivity = require('./middleware/logUserActivity');
 const bitacoraRoutes = require('./routes/bitacoraRoutes');
+const logActivity = require('./middleware/logUserActivity');
+
+dotenv.config(); // Cargar variables del archivo .env
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middlewares
-app.use(cors());
+// Middleware
+app.use(cors({
+    origin: '*', // Permitir solicitudes de cualquier origen
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
-// Middleware to log the URL
-
-
 // Rutas
-app.use('/api', logActivity('viewed libros'), libroRoutes);
-app.use('/api', logActivity('viewed autores'), autorRoutes);
-app.use('/api', logActivity('viewed usuarios'), userRoutes);
-app.use('/api', logActivity('viewed editoriales'), editorialRoutes);
-app.use('/api', logActivity('viewed categorias'), categoriaRoutes);
-app.use('/api', bitacoraRoutes);
+app.use('/api/libros', logActivity('viewed libros'), libroRoutes);
+app.use('/api/autores', logActivity('viewed autores'), autorRoutes);
+app.use('/api/usuarios', logActivity('viewed usuarios'), userRoutes);
+app.use('/api/editoriales', logActivity('viewed editoriales'), editorialRoutes);
+app.use('/api/categorias', logActivity('viewed categorias'), categoriaRoutes);
+app.use('/api/bitacora', bitacoraRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
-    res.send('juany ta gozu!');
+    res.send('Bienvenido a la API de Biblioteca');
 });
 
+// Iniciar servidor
 app.listen(port, () => {
-    console.log(`Servidor corriendo en ${port}`);
+    console.log(`Servidor corriendo en el puerto ${port}`);
 });
