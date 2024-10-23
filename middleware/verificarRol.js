@@ -1,15 +1,14 @@
 const verificarRol = (rolesPermitidos) => {
     return (req, res, next) => {
-        // Verificar si req.user existe y si tiene la propiedad 'rol'
-        if (!req.user || !req.user.rol) {
-            return res.status(401).json({ mensaje: 'Usuario no autenticado o rol no asignado' });
+        const userRoleId = req.user.rol;
+        if(!req.user||!req.user.rol){
+            return res.status(401).json({ mensaje: 'Acceso denegado' });
         }
-
-        // Verificar si el rol del usuario está permitido
-        if (!rolesPermitidos.includes(req.user.rol)) {
+        if (!rolesPermitidos.includes(userRoleId)) {
             return res.status(403).json({ mensaje: 'Acceso denegado' });
         }
         next();
     };
 };
 
+module.exports = verificarRol;
