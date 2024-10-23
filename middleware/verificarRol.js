@@ -1,6 +1,8 @@
 const verificarRol = (rolesPermitidos) => {
     return (req, res, next) => {
-        if (!rolesPermitidos.includes(req.user.role)) {
+        const userRoleId = req.user.role;
+
+        if (!rolesPermitidos.includes(userRoleId)) {
             return res.status(403).json({ mensaje: 'Acceso denegado' });
         }
         next();
