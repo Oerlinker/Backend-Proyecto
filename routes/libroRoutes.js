@@ -5,21 +5,22 @@ const {
     getbyName,
     updLibro,
     delLibro,
-    getLibroById,
-
+    getLibroById
 } = require('../controllers/libroController');
+const verificarRol= require('../middleware/verificarRol');
+
 const {crearNuevoPrestamo} = require("../controllers/prestamoController");
 const libroController = require('../controllers/libroController');
 
 const router = express.Router();
 
 router.get('/libros', getLibro);
-router.get('/libros/:id', libroController.getLibroById);
+router.get('/libros/:id',getLibroById);
 router.get('/search', getbyName);
-router.post('/libros', adLibro);
+router.post('/libros',verificarRol([3,4]), adLibro);
 router.post('/prestamo/:id', crearNuevoPrestamo);
 
-router.put('/libros/:id',updLibro);
+router.put('/libros/:id', updLibro);
 router.delete('/libros/:id', delLibro);
 
 module.exports = router;

@@ -1,7 +1,7 @@
+
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const pool = require('./db'); // Asumiendo que tienes un archivo `db.js` para la conexión a PostgreSQL
 const libroRoutes = require('./routes/libroRoutes');
 const autorRoutes = require('./routes/autorRoutes');
 const userRoutes = require('./routes/usuarioRoutes');
