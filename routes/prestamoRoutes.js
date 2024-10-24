@@ -1,15 +1,15 @@
 const express = require('express');
-const { crearNuevoPrestamo, registrarLibro, obtenerTodosPrestamos } = require('../controllers/prestamoController');
+const { solicitarPrestamo, registrarLibro, obtenerTodosPrestamos, isBookAvailable, obtenerEdiciones } = require('../controllers/prestamoController');
 const router = express.Router();
-const verificarRol= require('../middleware/verificarRol')
-const {validationResult} = require("express-validator");
-// Ruta para crear un nuevo préstamo
-router.post('/prestamos',verificarRol([2,3]), crearNuevoPrestamo);
 
-// Ruta para registrar un libro en un préstamo
-router.post('/libroprestamo',verificarRol([3,4]), registrarLibro);
+//ruta para crear un prestamo
+router.post('/prestamos', solicitarPrestamo);
 
-// Ruta para obtener todos los préstamos
-router.get('/prestamos',verificarRol([3,4]), obtenerTodosPrestamos);
+//ruta para verificar la disponibilidad de un libro
+router.get('/prestamos/:id/disponibilidad', isBookAvailable);
+
+//ruta para sacar las ediciones disponibles segun un libro
+router.get('/libros/:libroid/ediciones', obtenerEdiciones);
+
 
 module.exports = router;

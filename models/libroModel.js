@@ -1,4 +1,3 @@
-
 const pool = require('../db');
 
 // Función para crear un nuevo libro
@@ -56,9 +55,9 @@ const getLibroByName = async (query) => {
     try {
         //para dividir en palabras clave
         const keywords = query.split(' ').map(word => `%${word}%`);
-       //consulta para conicidencias con cualquier palabra
+        //consulta para conicidencias con cualquier palabra
         const conditions = keywords.map((_, index) => `Titulo ILIKE $${index +1}`).join(' OR ');
-        
+
         const result = await pool.query(
             `SELECT * FROM libros WHERE ${conditions}`,
             keywords
@@ -96,6 +95,43 @@ const deleteLibro = async (id) => {
         throw error;
     }
 };
+//todas las categorias
+const getCategorias  = async () => {
+    try {
+        const result = await pool.query('SELECT * FROM categorias')
+        return result;
+    } catch (error) {
+        console.error('No se encontró ninguna categoria', error);
+        throw error;
+    }
+}
+//todos los libros por categoria
+const getLibroxCategoria  = async (id) => {
+    try {
+        const result = await pool.query('SELECT * FROM libros WHERE categoriaid = $1', [id]);
+        return result.rows;
+    } catch (error) {
+        console.error('No se encontró ninguna libro', error);
+        throw error;
+    }
+}
+
+//Consulta para que devuelva los detalles del libro (nombre de autor, nombre editorial etc...)
+const getBookDetails = async (id) => {
+    const query = `
+        SELECT libros.*, autor.nombre AS autor, editoriales.nombre_editorial AS editorial, categorias.nombre_categoria AS categoria, 
+        json_agg(json_build_object('edicionid', ediciones.edicionid, 'fecha_publicacion', ediciones.fecha_publicacion)) AS ediciones
+        FROM libros
+        JOIN autor ON libros.autorid = autor.autorid
+        JOIN editoriales ON libros.editorialid = editoriales.editorialid
+        JOIN categorias ON libros.categoriaid = categorias.categoriaid
+        LEFT JOIN ediciones ON libros.libroid = ediciones.libroid  -- LEFT JOIN para incluir libros sin ediciones
+        WHERE libros.libroid = $1
+        GROUP BY libros.libroid, autor.nombre, editoriales.nombre_editorial, categorias.nombre_categoria`;
+
+    const result = await pool.query(query, [id]);
+    return result.rows[0];
+};
 
 module.exports = {
     createLibro,
@@ -104,7 +140,10 @@ module.exports = {
     updateLibro,
     deleteLibro,
     getLibrosbyid,
-    prestamo
+    prestamo,
+    getCategorias,
+    getLibroxCategoria,
+    getBookDetails
 };
 
 
