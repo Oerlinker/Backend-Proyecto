@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getUser, updateUserRoles } = require('../controllers/userController');
+const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, updateUserName} = require('../controllers/userController');
 const  verificarRol= require('../middleware/verificarRol');
 
 // Ruta para registrar un usuario
