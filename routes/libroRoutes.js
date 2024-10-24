@@ -7,7 +7,7 @@ const {
     searchLibros
 
 } = require('../controllers/libroController');
-const {crearNuevoPrestamo} = require("../controllers/prestamoController");
+
 const libroController = require('../controllers/libroController');
 
 const router = express.Router();
