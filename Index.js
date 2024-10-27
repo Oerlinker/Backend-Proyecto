@@ -9,6 +9,7 @@ const editorialRoutes = require('./routes/editorialRoutes');
 const categoriaRoutes = require('./routes/categoriRoutes');
 const logActivity = require('./middleware/logUserActivity');
 const bitacoraRoutes = require('./routes/bitacoraRoutes');
+const edicionesRoutes = require('./routes/edicionesRoutes');
 //const prestamoRoutes = require('./routes/prestamoRoutes');
 
 
@@ -26,6 +27,7 @@ app.use(cors({
 app.use(express.json());
 
 // Rutas
+app.use('/api', logActivity('viewed ediciones'), edicionesRoutes);
 app.use('/api', logActivity('viewed libros'), libroRoutes);
 app.use('/api', logActivity('viewed autores'), autorRoutes);
 app.use('/api', logActivity('viewed usuarios'), userRoutes);

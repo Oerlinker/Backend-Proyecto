@@ -8,7 +8,7 @@ const createAutor = async ({ Nombre, Biografia, Nacionalidad }) => {
             'INSERT INTO Autor (Nombre, Biografia, Nacionalidad) VALUES ($1, $2, $3) RETURNING *',
             [Nombre, Biografia, Nacionalidad]
         );
-        return result.rows[0]; // Retornamos el autor recién creado
+        return result.rows[0];
     } catch (error) {
         console.error('Error creando el autor', error);
         throw error;

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { addCategoria, getAllCategorias, getCategoriaByIdController, updCategoria, delCategoria } = require('../controllers/categoriaController');
 
-router.post('/categorias/add', addCategoria);
+router.post('/categorias/', addCategoria);
 router.get('/categorias/', getAllCategorias);
 router.get('/categorias/:id', getCategoriaByIdController);
 router.put('/categorias/:id', updCategoria);
