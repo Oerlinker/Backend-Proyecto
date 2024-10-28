@@ -1,4 +1,3 @@
-
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -8,10 +7,9 @@ const userRoutes = require('./routes/usuarioRoutes');
 const editorialRoutes = require('./routes/editorialRoutes');
 const categoriaRoutes = require('./routes/categoriRoutes');
 const logActivity = require('./middleware/logUserActivity');
-const bitacoraRoutes = require('./routes/bitacoraRoutes');
 const edicionesRoutes = require('./routes/edicionesRoutes');
 //const prestamoRoutes = require('./routes/prestamoRoutes');
-
+const logRoutes = require('./routes/logRoutes');
 
 dotenv.config(); // Cargar variables del archivo .env
 
@@ -34,7 +32,7 @@ app.use('/api', logActivity('viewed usuarios'), userRoutes);
 app.use('/api', logActivity('viewed editoriales'), editorialRoutes);
 app.use('/api', logActivity('viewed categorias'), categoriaRoutes);
 //app.use('/api', logActivity('viewed prestamos'), prestamoRoutes);
-app.use('/api', bitacoraRoutes);
+app.use('/api',logRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
