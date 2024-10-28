@@ -1,9 +1,9 @@
 const pool = require('../db');
-const logUserActivity = async (userId, action,userIp) => {
+const logUserActivity = async (userId, action) => {
     try {
         await pool.query(
-            'INSERT INTO useractivitylog (userid, action, timestamp) VALUES ($1, $2, NOW(), $3)',
-            [userId, action,userIp]
+            'INSERT INTO useractivitylog (userid, action, timestamp) VALUES ($1, $2, NOW())',
+            [userId, action]
         );
     } catch (error) {
         console.error('Error logging user activity', error);
