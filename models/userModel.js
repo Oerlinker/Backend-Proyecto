@@ -3,12 +3,10 @@ const bcrypt = require('bcryptjs');
 
 // Función para crear un nuevo usuario
 const createUser = async ({ nombre, email, password, rol }) => {
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
     try {
         const result = await pool.query(
-            'INSERT INTO Usuario (rolid,nombre_usuario,contraseña,correo_electronico) VALUES ($1, $2, $3, $4) RETURNING *',
+            'INSERT INTO Usuario (rolid, nombre_usuario, contraseña, correo_electronico) VALUES ($1, $2, $3, $4) RETURNING *',
             [1, nombre, hashedPassword, email]
         );
         return result.rows[0];
@@ -61,15 +59,13 @@ const updatePassword = async (id, hashedPassword) => {
 const updateName = async (userId, newName) => {
     try {
         const result = await pool.query(
-            'UPDATE usuario SET nombre_usuario = $1 WHERE usuarioid = $2 RETURNING *', // Asegúrate de usar RETURNING *
+            'UPDATE usuario SET nombre_usuario = $1 WHERE usuarioid = $2 RETURNING *',
             [newName, userId]
         );
-
-        // Devuelve el usuario actualizado
-        return result.rows[0]; // Asegúrate de que hay un usuario actualizado
+        return result.rows[0];
     } catch (error) {
         console.error('Error actualizando el nombre del usuario:', error);
-        throw error; // Propaga el error para manejarlo en el controlador
+        throw error;
     }
 };
 
@@ -79,18 +75,45 @@ const updateCorreo = async (userId, newCorreo) => {
             'UPDATE usuario SET correo_electronico = $1 WHERE usuarioid = $2',
             [newCorreo, userId]
         );
-
-        // Devuelve el usuario actualizado
-        return result.rowCount > 0; // Retorna true si la actualización fue exitosa
+        return result.rowCount > 0;
     } catch (error) {
         console.error('Error actualizando el correo del usuario:', error);
-        throw error; // Propaga el error para manejarlo en el controlador
+        throw error;
     }
 };
 
+// Función para crear una suscripción
+const createSubscription = async (subscriptionData) => {
+    const { usuarioid, fecha_inicio, fecha_fin, estado } = subscriptionData;
+    try {
+        await pool.query(
+            'INSERT INTO subscripciones (usuarioid, fecha_inicio, fecha_fin, estado) VALUES ($1, $2, $3, $4)',
+            [usuarioid, fecha_inicio, fecha_fin, estado]
+        );
+    } catch (error) {
+        console.error('Error creando la suscripción', error);
+        throw error;
+    }
+};
+
+// Función para insertar datos en la tabla miembros
+const createMember = async (memberData) => {
+    const { nombre, telefono, direccion, carrera, semestre, registro, usuarioid } = memberData;
+    try {
+        await pool.query(
+            'INSERT INTO miembros (nombre, telefono, direccion, carrera, semestre, registro, usuarioid) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+            [nombre, telefono, direccion, carrera, semestre, registro, usuarioid]
+        );
+    } catch (error) {
+        console.error('Error creando el miembro', error);
+        throw error;
+    }
+};
 
 module.exports = {
     createUser,
+    createSubscription,
+    createMember,
     getUserByEmail,
     getUsers,
     updateUserRole,
