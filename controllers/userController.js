@@ -65,6 +65,7 @@ const updateUserRoles = async (req, res) => {
 
     try {
         const updatedUser = await updateUserRole(userId, newRole);
+        await logUserActivity(userId, `Actualización de rol a ${newRole}`);
         console.log('Usuario actualizado:', updatedUser);
         res.status(200).json({ message: 'Rol actualizado con éxito', user: updatedUser });
     } catch (error) {
@@ -92,7 +93,7 @@ const updateUserPassword = async (req, res) => {
 
         // Llama a la función del modelo para actualizar la contraseña en la base de datos
         await updatePassword(id, hashedPassword);
-
+        await logUserActivity(id, `Cambio de contraseña de usuario`);
         res.status(200).json({ message: 'Contraseña actualizada con éxito' });
     } catch (error) {
         console.error('Error al actualizar la contraseña:', error);
@@ -110,7 +111,7 @@ const updateUserName = async (req, res) => {
         if (!updatedUser) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
-
+        await logUserActivity(userId, `Cambio de nombre de usuario a ${nombre}`);
         res.status(200).json({ message: 'Nombre actualizado con éxito', user: updatedUser });
     } catch (error) {
         console.error('Error al actualizar el nombre del usuario:', error);
