@@ -8,37 +8,35 @@ const editorialRoutes = require('./routes/editorialRoutes');
 const categoriaRoutes = require('./routes/categoriRoutes');
 const logActivity = require('./middleware/logUserActivity');
 const edicionesRoutes = require('./routes/edicionesRoutes');
-//const prestamoRoutes = require('./routes/prestamoRoutes');
 const logRoutes = require('./routes/logRoutes');
 
-dotenv.config(); // Cargar variables del archivo .env
+dotenv.config(); // Load .env variables
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-    origin: '*', // Permitir solicitudes de cualquier origen
+    origin: '*', // Allow requests from any origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
-// Rutas
-app.use('/api', logActivity('viewed ediciones'), edicionesRoutes);
-app.use('/api', logActivity('viewed libros'), libroRoutes);
-app.use('/api', logActivity('viewed autores'), autorRoutes);
-app.use('/api', logActivity('viewed usuarios'), userRoutes);
-app.use('/api', logActivity('viewed editoriales'), editorialRoutes);
-app.use('/api', logActivity('viewed categorias'), categoriaRoutes);
-//app.use('/api', logActivity('viewed prestamos'), prestamoRoutes);
-app.use('/api',logRoutes);
+// Routes with logging middleware
+app.use('/api/ediciones', logActivity('viewed ediciones'), edicionesRoutes);
+app.use('/api/libros', logActivity('viewed libros'), libroRoutes);
+app.use('/api/autores', logActivity('viewed autores'), autorRoutes);
+app.use('/api/usuarios', logActivity('viewed usuarios'), userRoutes);
+app.use('/api/editoriales', logActivity('viewed editoriales'), editorialRoutes);
+app.use('/api/categorias', logActivity('viewed categorias'), categoriaRoutes);
+app.use('/api/activity-log', logRoutes);
 
-// Ruta de bienvenida
+// Welcome route
 app.get('/', (req, res) => {
     res.send('juany ta gozu!');
 });
 
 app.listen(port, () => {
-    console.log(`Servidor corriendo en ${port}`);
+    console.log(`Server running on port ${port}`);
 });

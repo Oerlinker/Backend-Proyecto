@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { addEditorial, getAllEditoriales, getEditorialByIdController, updEditorial, delEditorial } = require('../controllers/editorialController');
 
+
 router.post('/editoriales', addEditorial);
 router.get('/editoriales', getAllEditoriales);
 router.get('/editoriales/:id', getEditorialByIdController);

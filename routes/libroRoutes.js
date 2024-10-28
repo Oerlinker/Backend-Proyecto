@@ -7,9 +7,7 @@ const {
     searchLibros
 
 } = require('../controllers/libroController');
-
 const libroController = require('../controllers/libroController');
-
 const router = express.Router();
 
 router.get('/libros', getLibro);
