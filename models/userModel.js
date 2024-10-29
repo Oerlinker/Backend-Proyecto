@@ -82,7 +82,6 @@ const updateCorreo = async (userId, newCorreo) => {
     }
 };
 
-// Función para crear una suscripción
 const createSubscription = async (subscriptionData) => {
     const { usuarioid, fecha_inicio, fecha_fin, estado } = subscriptionData;
     try {
@@ -96,7 +95,6 @@ const createSubscription = async (subscriptionData) => {
     }
 };
 
-// Función para insertar datos en la tabla miembros
 const createMember = async (memberData) => {
     const { nombre, telefono, direccion, carrera, semestre, registro, usuarioid } = memberData;
     try {

@@ -143,10 +143,16 @@ const updateUserCorreo = async (req, res) => {
     }
 };
 
-// Controlador para crear una suscripción y miembro
 const createSubscriptionAndMember = async (req, res) => {
-    const { usuarioid, nombre, telefono, direccion, carrera, semestre, registro } = req.body;
+    const {usuarioid, nombre, telefono, direccion, carrera, semestre, registro} = req.body;
     try {
+
+        // Insertar datos en la tabla miembros
+        const memberData = {nombre, telefono, direccion, carrera, semestre, registro, usuarioid};
+        await createMember(memberData);
+
+
+
         // Crear suscripción
         const subscriptionData = {
             usuarioid,
@@ -156,13 +162,10 @@ const createSubscriptionAndMember = async (req, res) => {
         };
         await createSubscription(subscriptionData);
 
-        // Insertar datos en la tabla miembros
-        const memberData = { nombre, telefono, direccion, carrera, semestre, registro, usuarioid };
-        await createMember(memberData);
-
-        res.status(201).json({ message: 'Suscripción y miembro creados con éxito' });
+        res.status(201).json({message: 'Suscripción y miembro creados con éxito'});
     } catch (error) {
-        res.status(500).json({ message: 'Error creando la suscripción y miembro', error });
+        console.error('Error creando la suscripción y miembro:', error);
+        res.status(500).json({message: 'Error creando la suscripción y miembro', error});
     }
 };
 
