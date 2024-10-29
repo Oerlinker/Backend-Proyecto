@@ -4,7 +4,7 @@ const { logUserActivity } = require('../models/userActivityLogModel');
 //richiculo
 // Crear un nuevo préstamo
 const solicitarPrestamo = async (req, res) => {
-    const { miembroid, edicionid, fechaDevolucion } = req.body;
+    const { id, miembroid, edicionid, fechaDevolucion } = req.body;
     console.log('Datos recibidos en la solicitud:', req.body);
     try {
         const disponible = await verificarDisponibilidadEdicion(edicionid)
