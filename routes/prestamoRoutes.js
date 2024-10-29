@@ -1,5 +1,5 @@
 const express = require('express');
-const { solicitarPrestamo, registrarLibro, obtenerTodosPrestamos, isBookAvailable, obtenerEdiciones } = require('../controllers/prestamoController');
+const { solicitarPrestamo, isBookAvailable, obtenerEdiciones } = require('../controllers/prestamoController');
 const router = express.Router();
 
 
