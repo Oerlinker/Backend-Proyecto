@@ -1,29 +1,20 @@
-const{createEdicion,getEdiciones,getEdicionById,updateEdicion,deleteEdicion}=require('../models/edicionModel');
+const { createEdicion, getEdiciones, getEdicionByISBN, updateEdicion, deleteEdicion } = require('../models/edicionModel');
 
-const addEdicion = async(req,res) =>{
-    const{ isbn,numero_edicion,fecha_publicacion,libroid,proveedorid,total_prestamos,promedio_rating}=req.body;
+const addEdicion = async (req, res) => {
+    const { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor } = req.body;
     try {
-        const nuevaEdicion = await createEdicion({
-            isbn,
-            numero_edicion,
-            fecha_publicacion,
-            libroid,
-            proveedorid,
-            total_prestamos,
-            promedio_rating
-        });
+        const nuevaEdicion = await createEdicion({ isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor });
         res.status(201).json({
-            message: 'Edicion creada con exito',
+            message: 'Edicion agregada con exito',
             body: nuevaEdicion
         });
-    }
-    catch (error) {
-        console.error('Error creando la edicion', error);
-        res.status(500).json({ error: 'Error creando la edicion' });
+    } catch (error) {
+        console.error('Error agregando la edicion', error);
+        res.status(500).json({ error: 'Error agregando la edicion' });
     }
 };
 
-const getEdicion=async(req,res)=>{
+const getEdicion = async (req, res) => {
     try {
         const ediciones = await getEdiciones();
         if (!ediciones) {
@@ -36,25 +27,25 @@ const getEdicion=async(req,res)=>{
     }
 };
 
-const getEdicionByIdController=async(req,res)=>{
-    const{id}=req.params;
+const getEdicionesByISBN = async (req, res) => {
+    const { isbn } = req.params;
     try {
-        const edicion = await getEdicionById(id);
+        const edicion = await getEdicionByISBN(isbn);
         if (!edicion) {
-            return res.status(404).json({ error: 'Edicion no encontrada' });
+            return res.status(404).json({ message: 'No se encontró la edición' });
         }
         res.status(200).json(edicion);
     } catch (error) {
-        console.error('Error obteniendo la edicion por ID', error);
-        res.status(500).json({ error: 'Error obteniendo la edicion por ID' });
+        console.error('Error obteniendo la edición por ISBN', error);
+        res.status(500).json({ error: 'Error obteniendo la edición por ISBN' });
     }
 };
 
-const updEdicion=async(req,res)=>{
-    const{id}=req.params;
-    const{isbn,numero_edicion,fecha_publicacion,libroid,proveedorid,total_prestamos,promedio_rating}=req.body;
+const updEdicion = async (req, res) => {
+    const { id } = req.params;
+    const { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor } = req.body;
     try {
-        const edicionActualizada = await updateEdicion(id, { isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating });
+        const edicionActualizada = await updateEdicion(id, { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor });
         if (!edicionActualizada) {
             return res.status(404).json({ error: 'Edicion no encontrada' });
         }
@@ -68,8 +59,8 @@ const updEdicion=async(req,res)=>{
     }
 };
 
-const delEdicion=async(req,res)=>{
-    const{id}=req.params;
+const delEdicion = async (req, res) => {
+    const { id } = req.params;
     try {
         const edicionEliminada = await deleteEdicion(id);
         if (!edicionEliminada) {
@@ -85,10 +76,10 @@ const delEdicion=async(req,res)=>{
     }
 };
 
-module.exports={
+module.exports = {
     addEdicion,
     getEdicion,
-    getEdicionByIdController,
+    getEdicionesByISBN,
     updEdicion,
     delEdicion
 };

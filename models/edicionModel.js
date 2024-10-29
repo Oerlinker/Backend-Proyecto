@@ -1,10 +1,17 @@
 const pool = require('../db');
 
-const createEdicion = async ({ edicionid, isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating }) => {
+const createEdicion = async ({ isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor }) => {
     try {
         const result = await pool.query(
-            'INSERT INTO ediciones (edicionid, isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-            [edicionid, isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating]
+            `INSERT INTO ediciones (isbn, numero_edicion, fecha_publicacion, libroid, proveedorid)
+             VALUES (
+                $1, 
+                $2, 
+                $3, 
+                (SELECT libroid FROM libros WHERE titulo = $4), 
+                (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $5)
+             ) RETURNING *`,
+            [isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor]
         );
         return result.rows[0];
     } catch (error) {
@@ -15,7 +22,14 @@ const createEdicion = async ({ edicionid, isbn, numero_edicion, fecha_publicacio
 
 const getEdiciones = async () => {
     try {
-        const result = await pool.query('SELECT * FROM ediciones');
+        const result = await pool.query(
+            `SELECT e.edicionid, e.isbn, e.numero_edicion, e.fecha_publicacion,
+                    l.titulo AS titulo_libro, 
+                    p.nombre_proveedor AS proveedor
+             FROM ediciones e
+             JOIN libros l ON e.libroid = l.libroid
+             JOIN proveedores p ON e.proveedorid = p.proveedorid`
+        );
         return result.rows;
     } catch (error) {
         console.error('Error obteniendo las ediciones', error);
@@ -23,22 +37,36 @@ const getEdiciones = async () => {
     }
 };
 
-const getEdicionById = async (id) => {
+const getEdicionByISBN = async (isbn) => {
     try {
-        const result = await pool.query('SELECT * FROM ediciones WHERE edicionid = $1', [id]);
+        const result = await pool.query(
+            `SELECT e.edicionid, e.isbn, e.numero_edicion, e.fecha_publicacion,
+                    l.titulo AS titulo_libro,
+                    p.nombre_proveedor AS proveedor
+             FROM ediciones e
+             JOIN libros l ON e.libroid = l.libroid
+             JOIN proveedores p ON e.proveedorid = p.proveedorid
+             WHERE e.isbn = $1`,
+            [isbn]
+        );
         return result.rows[0];
     } catch (error) {
-        console.error('Error obteniendo la edición por ID', error);
+        console.error('Error obteniendo la edición por ISBN', error);
         throw error;
     }
 };
 
-const updateEdicion = async (id, { isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating }) => {
+const updateEdicion = async (id, { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor }) => {
     try {
         const result = await pool.query(
-            `UPDATE ediciones SET isbn = $1, numero_edicion = $2, fecha_publicacion = $3, libroid = $4, proveedorid = $5, total_prestamos = $6, promedio_rating = $7
-             WHERE edicionid = $8 RETURNING *`,
-            [isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating, id]
+            `UPDATE ediciones SET
+                isbn = $1,
+                numero_edicion = $2,
+                fecha_publicacion = $3,
+                libroid = (SELECT libroid FROM libros WHERE titulo = $4),
+                proveedorid = (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $5)
+             WHERE edicionid = $6 RETURNING *`,
+            [isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, id]
         );
         return result.rows[0];
     } catch (error) {
@@ -60,7 +88,7 @@ const deleteEdicion = async (id) => {
 module.exports = {
     createEdicion,
     getEdiciones,
-    getEdicionById,
+    getEdicionByISBN,
     updateEdicion,
     deleteEdicion
 };
