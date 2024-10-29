@@ -1,4 +1,4 @@
-const { crearPrestamo, registrarLibroPrestamo, obtenerPrestamos } = require('../models/prestamoModel');
+const { crearPrestamo, registrarLibroPrestamo, obtenerPrestamos, getEdiciones, verificarDisponibilidadLibro, verificarDisponibilidadEdicion } = require('../models/prestamoModel');
 const { logUserActivity } = require('../models/userActivityLogModel');
 
 //richiculo
