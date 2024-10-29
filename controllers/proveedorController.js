@@ -27,7 +27,7 @@ const getProveedor = async (req, res) => {
     }
 };
 
-const getProveedorById = async (req, res) => {
+const getProveedorByIdController = async (req, res) => {
     const { id } = req.params;
     try {
         const proveedor = await getProveedorById(id);
@@ -79,7 +79,7 @@ const delProveedor = async (req, res) => {
 module.exports = {
     addProveedor,
     getProveedor,
-    getProveedorById,
+    getProveedorByIdController,
     updProveedor,
     delProveedor
 };
