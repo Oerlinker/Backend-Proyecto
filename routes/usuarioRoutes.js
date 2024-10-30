@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, updateUserName, updateUserPassword, createSubscriptionAndMember, prestamosActivos, prestamosDevolver, hacerReseña } = require('../controllers/userController');
+const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, updateUserName, updateUserPassword, createSubscriptionAndMember, prestamosActivos, prestamosDevolver, hacerReseña,
+    getMember
+} = require('../controllers/userController');
 const verificarRol = require('../middleware/verificarRol');
 
 // Ruta para registrar un usuario
@@ -31,5 +33,7 @@ router.post('/users/prestamos/devolver/:prestamoid', prestamosDevolver);
 
 //ruta de reseña
 router.post('/users/review', hacerReseña);
+
+router.get('/users/members/', getMember);
 
 module.exports = router;

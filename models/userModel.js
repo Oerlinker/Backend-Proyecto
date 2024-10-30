@@ -145,6 +145,16 @@ const createMember = async (memberData) => {
     }
 };
 
+const getMembers = async () => {
+    try {
+        const result = await pool.query('SELECT * FROM miembros');
+        return result.rows;
+    } catch (error) {
+        console.error('Error obteniendo los miembros', error);
+        throw error;
+    }
+};
+
 module.exports = {
     createUser,
     createSubscription,
@@ -157,5 +167,6 @@ module.exports = {
     updateCorreo,
     getPrestamosActivos,
     devolverPrestamo,
-    setReseña
+    setReseña,
+    getMembers
 };

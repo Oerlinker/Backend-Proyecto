@@ -1,4 +1,4 @@
-const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription, getPrestamosActivos, devolverPrestamo, setReseña } = require('../models/userModel');
+const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription, getPrestamosActivos, devolverPrestamo, setReseña,getMembers } = require('../models/userModel');
 const { logUserActivity } = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -213,6 +213,14 @@ const createSubscriptionAndMember = async (req, res) => {
     }
 };
 
+const getMember = async (req, res) => {
+    try {
+        const members = await getMembers();
+        res.status(200).json(members);
+    } catch (error) {
+        res.status(500).json({ message: 'Error obteniendo los miembros', error });
+    }
+}
 module.exports = {
     registerUser,
     loginUser,
@@ -224,7 +232,8 @@ module.exports = {
    createSubscriptionAndMember,
    prestamosActivos,
    prestamosDevolver, 
-   hacerReseña
+   hacerReseña,
+    getMember
 };
 
 
