@@ -45,7 +45,7 @@ const getEdiciones = async (libroid) => {
     const result = await pool.query(`SELECT e.* 
                                     from ediciones e
                                     left join prestamos p on e.edicionid = p.edicionid
-                                    WHERE e.libroid = $1 AND (p.estado IS NULL OR p.estado <> 'activo')`, [libroid]);
+                                    WHERE e.libroid = $1 AND (p.prestamoid IS NULL OR p.estado != 'activo')`, [libroid]);
     return result.rows;
 }
 
