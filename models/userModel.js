@@ -17,7 +17,7 @@ const setReseña = async (miembroid, edicionid, libroid, calificacion, comentari
 const getPrestamosActivos = async (id) => {
     try {
         const prestamos = await pool.query(`
-            SELECT p.prestamoid, l.titulo, e.numero_edicion, fecha_devolucion
+            SELECT p.prestamoid, l.libroid, l.titulo, e.edicionid, e.numero_edicion, fecha_devolucion
             FROM prestamos p, ediciones e, libros l
             WHERE miembroid = $1 AND estado = 'activo' 
             and p.edicionid = e.edicionid and e.libroid = l.libroid
