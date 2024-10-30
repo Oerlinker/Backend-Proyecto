@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, updateUserName, updateUserPassword, createSubscriptionAndMember } = require('../controllers/userController');
+const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, updateUserName, updateUserPassword, createSubscriptionAndMember, prestamosActivos, prestamosDevolver, hacerReseña } = require('../controllers/userController');
 const verificarRol = require('../middleware/verificarRol');
 
 // Ruta para registrar un usuario
@@ -23,6 +23,15 @@ router.put('/users/update', updateUserRoles);
 
 router.put('/users/password/:id', updateUserPassword);
 
+//ruta gestion de prestamos
+router.get('/users/prestamos/activos/:miembroid', prestamosActivos);
 
+//ruta de devolver prestamo
+router.post('/users/prestamos/devolver/:prestamoid', prestamosDevolver);
+
+//ruta de reseña
+router.post('/users/review', hacerReseña);
+
+router.get('/users/members', getMembers);
 
 module.exports = router;

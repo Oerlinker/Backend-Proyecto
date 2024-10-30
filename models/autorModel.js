@@ -2,6 +2,8 @@
 const pool = require('../db');
 
 // Función para crear un nuevo autor
+
+// Función para crear un nuevo autor
 const createAutor = async ({ Nombre, Biografia, Nacionalidad }) => {
     try {
         const result = await pool.query(

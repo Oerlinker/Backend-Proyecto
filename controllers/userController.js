@@ -1,7 +1,51 @@
-const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription } = require('../models/userModel');
+const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription, getPrestamosActivos, devolverPrestamo, setReseña } = require('../models/userModel');
 const { logUserActivity } = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
+//hacer una reseña
+const hacerReseña = async (req, res) => {
+    const { miembroid, edicionid, libroid, calificacion, comentario } = req.body;
+
+    try {
+        const newReseña = await setReseña(miembroid, edicionid, libroid, calificacion, comentario);
+        res.status(201).json({ message: 'Reseña creada con éxito.', data: newReseña });
+    } catch (error) {
+        console.error('Error al crear la reseña:', error);
+        res.status(500).json({ message: 'Error al crear la reseña.' });
+    }
+};
+
+//adiciones para la nube (gestion de prestamo)
+
+const prestamosActivos = async (req, res) => {
+    const { miembroid } = req.params;
+    try {
+        const prestamos = await getPrestamosActivos(miembroid);
+        console.log('prestamos', prestamos);
+        if (!prestamos || prestamos.length === 0) {
+            return res.status(404).json({ message: 'No tienes préstamos activos.' });
+        }
+
+        res.status(200).json(prestamos);
+    } catch (error) {
+        console.error('Error al obtener préstamos activos:', error);
+        res.status(500).json({ message: 'Error al obtener los préstamos activos' });
+    }
+};
+
+//devolver prestamo manual
+const prestamosDevolver = async (req, res) => {
+    const { prestamoid } = req.params; // Cambiar de req.body a req.params
+
+    try {
+        await devolverPrestamo(prestamoid); // Llama a la función del modelo
+        res.status(200).json({ message: 'Préstamo devuelto con éxito.' });
+    } catch (error) {
+        console.error('Error al devolver el préstamo:', error);
+        res.status(500).json({ message: 'Error al devolver el préstamo.' });
+    }
+};
 
 // Controlador para registrar un nuevo usuario
 const registerUser = async (req, res) => {
@@ -169,6 +213,15 @@ const createSubscriptionAndMember = async (req, res) => {
     }
 };
 
+const getMemberController = async (req, res) => {
+    try {
+        const members = await getMembers();
+        res.status(200).json(members);
+    } catch (error) {
+        res.status(500).json({ message: 'Error obteniendo los miembros', error });
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
@@ -177,7 +230,11 @@ module.exports = {
     updateUserPassword,
     updateUserName,
     updateUserCorreo,
-   createSubscriptionAndMember
+   createSubscriptionAndMember,
+    getMemberController,
+    prestamosActivos,
+    prestamosDevolver,
+    hacerReseña
 };
 
 
