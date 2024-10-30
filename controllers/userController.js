@@ -1,7 +1,20 @@
-const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription, getPrestamosActivos, devolverPrestamo } = require('../models/userModel');
+const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription, getPrestamosActivos, devolverPrestamo, setReseña } = require('../models/userModel');
 const { logUserActivity } = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
+//hacer una reseña
+const hacerReseña = async (req, res) => {
+    const { miembroid, edicionid, libroid, calificacion, comentario } = req.body;
+
+    try {
+        const newReseña = await setReseña(miembroid, edicionid, libroid, calificacion, comentario);
+        res.status(201).json({ message: 'Reseña creada con éxito.', data: newReseña });
+    } catch (error) {
+        console.error('Error al crear la reseña:', error);
+        res.status(500).json({ message: 'Error al crear la reseña.' });
+    }
+};
 
 //adiciones para la nube (gestion de prestamo)
 
@@ -210,7 +223,8 @@ module.exports = {
     updateUserCorreo,
    createSubscriptionAndMember,
    prestamosActivos,
-   prestamosDevolver
+   prestamosDevolver, 
+   hacerReseña
 };
 
 

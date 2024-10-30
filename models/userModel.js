@@ -1,6 +1,18 @@
 const pool = require('../db');
 const bcrypt = require('bcryptjs');
 
+//hacer reseña
+const setReseña = async (miembroid, edicionid, libroid, calificacion, comentario) => {
+    const query = `
+        INSERT INTO reseña (miembroid, edicionid, libroid, calificacion, comentario, fecha_reseña)
+        VALUES ($1, $2, $3, $4, $5, NOW())
+        RETURNING *;
+    `;
+    const values = [miembroid, edicionid, libroid, calificacion, comentario];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+};
+
 //adicion para gestion de prestamo
 const getPrestamosActivos = async (id) => {
     try {
@@ -144,5 +156,6 @@ module.exports = {
     updateName,
     updateCorreo,
     getPrestamosActivos,
-    devolverPrestamo
+    devolverPrestamo,
+    setReseña
 };
