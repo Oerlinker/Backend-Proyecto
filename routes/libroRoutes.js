@@ -4,7 +4,8 @@ const {
     getLibro,
     updLibro,
     delLibro,
-    searchLibros
+    searchLibros,
+    buscarLibros
 
 } = require('../controllers/libroController');
 const libroController = require('../controllers/libroController');
@@ -23,6 +24,8 @@ router.delete('/libros/:id', delLibro);
 //ruta para sacar todas la categorias (books.js)
 router.get('/api/categorias', libroController.categorias);
 
+//ruta de busqueda avanzada
+router.get('/search', buscarLibros);
 
 
 module.exports = router;

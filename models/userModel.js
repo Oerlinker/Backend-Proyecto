@@ -1,6 +1,57 @@
 const pool = require('../db');
 const bcrypt = require('bcryptjs');
 
+//buscador avanzado
+const buscarLibrosAvanzado = async (titulo, categoriaid, autor, calificacion, isbn) => {
+    let query = `
+        SELECT DISTINCT l.libroid, l.titulo, a.nombre AS autor, COALESCE(AVG(l.promedio_rating), 0) AS calificacion
+        FROM libros l
+        LEFT JOIN ediciones e ON l.libroid = e.libroid 
+        LEFT JOIN reseña r ON e.edicionid = r.edicionid
+        LEFT JOIN autor a ON l.autorid = a.autorid
+    `;
+    
+    const conditions = [];
+    const params = [];
+
+    if (titulo) {
+        conditions.push('l.titulo ILIKE $1'); 
+        params.push(`%${titulo}%`);
+    }
+    if (categoriaid) {
+        conditions.push('l.categoriaid = $' + (params.length + 1));
+        params.push(parseInt(categoriaid, 10)); // Convertir a número
+    }
+    if (autor) {
+        conditions.push('a.nombre ILIKE $' + (params.length + 1));
+        params.push(`%${autor}%`);
+    }
+    if (isbn) {
+        conditions.push('e.isbn = $' + (params.length + 1));
+        params.push(isbn);
+    }
+    if (calificacion) {
+        conditions.push('l.promedio_rating >= $' + (params.length + 1)); // Cambiar de r.calificacion a e.promedio_rating
+        params.push(calificacion);
+    }
+
+    if (conditions.length > 0) {
+        query += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    // Agrupa solo por libroid
+    query += ' GROUP BY l.libroid, l.titulo, a.nombre';
+        // Debugging
+        console.log('Consulta SQL:', query);
+        console.log('Parámetros:', params);
+    
+    // Añadir DISTINCT para eliminar duplicados
+
+
+    const result = await pool.query(query, params);
+    return result.rows; 
+};
+
 //hacer reseña
 const setReseña = async (miembroid, edicionid, libroid, calificacion, comentario) => {
     const query = `
@@ -168,5 +219,6 @@ module.exports = {
     getPrestamosActivos,
     devolverPrestamo,
     setReseña,
-    getMembers
+    getMembers,
+    buscarLibrosAvanzado
 };
