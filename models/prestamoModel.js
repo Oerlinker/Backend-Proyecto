@@ -43,9 +43,12 @@ const verificarDisponibilidadEdicion = async (edicionid) => {
 //obtiene todas las ediciones que están disponibles segun un libro
 const getEdiciones = async (libroid) => {
     const result = await pool.query(`SELECT e.* 
-                                    from ediciones e
-                                    left join prestamos p on e.edicionid = p.edicionid
-                                    WHERE e.libroid = $1 AND (p.prestamoid IS NULL OR p.estado != 'activo')`, [libroid]);
+                                    FROM ediciones e
+                                    WHERE e.libroid = $1 
+                                    AND NOT EXISTS (
+                                    SELECT 1 
+                                    FROM prestamos p 
+                                    WHERE p.edicionid = e.edicionid AND p.estado = 'activo')`, [libroid]);
     return result.rows;
 }
 
