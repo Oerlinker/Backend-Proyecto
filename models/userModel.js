@@ -1,6 +1,31 @@
 const pool = require('../db');
 const bcrypt = require('bcryptjs');
 
+//adicion para gestion de prestamo
+const getPrestamosActivos = async (id) => {
+    try {
+        const prestamos = await pool.query(`
+            SELECT p.prestamoid, l.titulo, e.numero_edicion, fecha_devolucion
+            FROM prestamos p, ediciones e, libros l
+            WHERE miembroid = $1 AND estado = 'activo' 
+            and p.edicionid = e.edicionid and e.libroid = l.libroid
+
+        `, [id]);
+        return prestamos.rows;
+    } catch (error) {
+        console.error('Error obteniendo los prestamos', error);
+        throw error;
+    }
+};
+
+const devolverPrestamo = async (prestamoid) => {
+    try {
+        await pool.query(`UPDATE prestamos SET estado = 'devuelto' WHERE prestamoid = $1`, [prestamoid]);
+    } catch (error) {
+        throw error; // Lanza el error para que el controlador lo maneje.
+    }
+};
+
 // Función para crear un nuevo usuario
 const createUser = async ({ nombre, email, password, rol }) => {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -117,5 +142,7 @@ module.exports = {
     updateUserRole,
     updatePassword,
     updateName,
-    updateCorreo
+    updateCorreo,
+    getPrestamosActivos,
+    devolverPrestamo
 };

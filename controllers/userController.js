@@ -3,6 +3,37 @@ const { logUserActivity } = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+//adiciones para la nube (gestion de prestamo)
+
+const prestamosActivos = async (req, res) => {
+    const { miembroid } = req.params;
+    try {
+        const prestamos = await getPrestamosActivos(miembroid);
+        console.log('prestamos', prestamos);
+        if (!prestamos || prestamos.length === 0) {
+            return res.status(404).json({ message: 'No tienes préstamos activos.' });
+        }
+
+        res.status(200).json(prestamos);
+    } catch (error) {
+        console.error('Error al obtener préstamos activos:', error);
+        res.status(500).json({ message: 'Error al obtener los préstamos activos' });
+    }
+};
+
+//devolver prestamo manual
+const prestamosDevolver = async (req, res) => {
+    const { prestamoid } = req.params; // Cambiar de req.body a req.params
+
+    try {
+        await devolverPrestamo(prestamoid); // Llama a la función del modelo
+        res.status(200).json({ message: 'Préstamo devuelto con éxito.' });
+    } catch (error) {
+        console.error('Error al devolver el préstamo:', error);
+        res.status(500).json({ message: 'Error al devolver el préstamo.' });
+    }
+};
+
 // Controlador para registrar un nuevo usuario
 const registerUser = async (req, res) => {
     const { nombre, email, password } = req.body;
@@ -177,7 +208,9 @@ module.exports = {
     updateUserPassword,
     updateUserName,
     updateUserCorreo,
-   createSubscriptionAndMember
+   createSubscriptionAndMember,
+   prestamosActivos,
+   prestamosDevolver
 };
 
 
