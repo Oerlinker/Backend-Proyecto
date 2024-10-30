@@ -8,7 +8,7 @@ const editorialRoutes = require('./routes/editorialRoutes');
 const categoriaRoutes = require('./routes/categoriRoutes');
 const logActivity = require('./middleware/logUserActivity');
 const edicionesRoutes = require('./routes/edicionesRoutes');
-//const prestamoRoutes = require('./routes/prestamoRoutes');
+const prestamoRoutes = require('./routes/prestamoRoutes');
 const proveedorRoutes = require('./routes/proveedorRoutes');
 const logRoutes = require('./routes/logRoutes');
 
@@ -33,9 +33,9 @@ app.use('/api', logActivity('viewed usuarios'), userRoutes);
 app.use('/api', logActivity('viewed editoriales'), editorialRoutes);
 app.use('/api', logActivity('viewed categorias'), categoriaRoutes);
 app.use('/api', logActivity('viewed proveedores'), proveedorRoutes);
-//app.use('/api', logActivity('viewed prestamos'), prestamoRoutes);
-app.use('/api',logActivity([1,3]),logRoutes);
-
+app.use('/api', logActivity('viewed prestamos'), prestamoRoutes);
+app.use('/api',logRoutes);
+app.use('/api', prestamoRoutes);
 // Ruta de bienvenida
 app.get('/', (req, res) => {
     res.send('juany ta gozu!');
