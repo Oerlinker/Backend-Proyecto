@@ -13,7 +13,7 @@ router.post('/create-subscription', createSubscriptionAndMember);
 
 router.put('/users/name/:id', updateUserName);
 
-router.put('/users/correo/:id', updateUserCorreo);
+router.put('/users/email/:id', updateUserCorreo);
 
 // Ruta protegida: obtener lista de usuarios (solo administradores)
 router.get('/users', getUser);

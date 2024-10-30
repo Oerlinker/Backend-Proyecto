@@ -34,7 +34,7 @@ app.use('/api', logActivity('viewed editoriales'), editorialRoutes);
 app.use('/api', logActivity('viewed categorias'), categoriaRoutes);
 app.use('/api', logActivity('viewed proveedores'), proveedorRoutes);
 //app.use('/api', logActivity('viewed prestamos'), prestamoRoutes);
-app.use('/api',logRoutes);
+app.use('/api',logActivity([1,3]),logRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
