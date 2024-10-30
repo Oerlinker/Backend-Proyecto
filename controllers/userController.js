@@ -213,15 +213,6 @@ const createSubscriptionAndMember = async (req, res) => {
     }
 };
 
-const getMemberController = async (req, res) => {
-    try {
-        const members = await getMembers();
-        res.status(200).json(members);
-    } catch (error) {
-        res.status(500).json({ message: 'Error obteniendo los miembros', error });
-    }
-}
-
 module.exports = {
     registerUser,
     loginUser,
@@ -231,10 +222,9 @@ module.exports = {
     updateUserName,
     updateUserCorreo,
    createSubscriptionAndMember,
-    getMemberController,
-    prestamosActivos,
-    prestamosDevolver,
-    hacerReseña
+   prestamosActivos,
+   prestamosDevolver, 
+   hacerReseña
 };
 
 

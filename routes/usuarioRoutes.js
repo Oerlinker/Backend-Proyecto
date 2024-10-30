@@ -32,6 +32,4 @@ router.post('/users/prestamos/devolver/:prestamoid', prestamosDevolver);
 //ruta de reseña
 router.post('/users/review', hacerReseña);
 
-router.get('/users/members', getMembers);
-
 module.exports = router;

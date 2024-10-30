@@ -36,6 +36,7 @@ app.use('/api', logActivity('viewed proveedores'), proveedorRoutes);
 app.use('/api', logActivity('viewed prestamos'), prestamoRoutes);
 app.use('/api',logRoutes);
 app.use('/api', prestamoRoutes);
+app.use('/api', userRoutes);
 // Ruta de bienvenida
 app.get('/', (req, res) => {
     res.send('juany ta gozu!');
