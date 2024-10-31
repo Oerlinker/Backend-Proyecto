@@ -147,7 +147,11 @@ const createMember = async (memberData) => {
 
 const getMembers = async () => {
     try {
-        const result = await pool.query('SELECT * FROM miembros');
+        const result = await pool.query(`
+            SELECT m.miembroid, m.nombre, m.registro, u.correo_electronico AS correo
+            FROM Miembros m
+            JOIN Usuario u ON m.usuarioid = u.usuarioid
+        `);
         return result.rows;
     } catch (error) {
         console.error('Error obteniendo los miembros', error);

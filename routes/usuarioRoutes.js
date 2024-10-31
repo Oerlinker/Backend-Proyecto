@@ -3,7 +3,6 @@ const router = express.Router();
 const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, updateUserName, updateUserPassword, createSubscriptionAndMember, prestamosActivos, prestamosDevolver, hacerReseña,
     getMember
 } = require('../controllers/userController');
-const verificarRol = require('../middleware/verificarRol');
 
 // Ruta para registrar un usuario
 router.post('/register', registerUser);
