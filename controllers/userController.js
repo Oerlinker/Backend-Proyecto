@@ -94,7 +94,8 @@ const loginUser = async (req, res) => {
         const token = jwt.sign({ id: user.usuarioid, miembroid: user.miembroid, nombre: user.nombre_usuario, correo: user.correo_electronico, rol: user.rolid }, 'secretKey', { expiresIn: '1h' });
         console.log("Token generado:", token);
 
-        await logUserActivity(user.usuarioid, 'Inicio de sesión');
+        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        await logUserActivity(user.usuarioid, 'Inicio de sesión', userIp);
 
         res.status(200).json({ message: 'Login exitoso', token, nombre: user.nombre_usuario });
     } catch (error) {
