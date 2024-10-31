@@ -18,7 +18,7 @@ router.get('/libros/:id', libroController.getLibroById);
 router.get('/search', searchLibros);
 router.post('/libros', adLibro);
 
-router.get('api/libros/:id/reseñas', libroController.getReseñas);
+router.get('api/review/libro:id', libroController.getReseñas);
 
 router.put('/libros/:id',updLibro);
 router.delete('/libros/:id', delLibro);
