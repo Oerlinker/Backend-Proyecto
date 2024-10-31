@@ -15,11 +15,9 @@ const buscarLibros = async (req, res) => {
 
 // Controlador para agregar un nuevo libro
 const adLibro = async (req, res) => {
-    const {id, Titulo, Genero, AutorID, EditorialID, CategoriaID } = req.body;
+    const { Titulo, Genero, AutorID, EditorialID, CategoriaID } = req.body;
     try {
         const nuevoLibro = await createLibro({ Titulo, Genero, AutorID, EditorialID, CategoriaID });
-        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        await logUserActivity(id, `Se agregó al catalogo el libro: ${Titulo}`, userIp);
         res.status(201).json({
             message: 'Libro agregado con éxito',
             body: nuevoLibro
@@ -91,17 +89,11 @@ const updLibro = async (req, res) => {
 // Controlador para eliminar un libro
 const delLibro = async (req, res) => {
     const { id } = req.params; // ID del libro a eliminar
-    const userId = req.header('User-ID'); // ID del usuario del header
-
     try {
         const libroEliminado = await deleteLibro(id);
         if (!libroEliminado) {
             return res.status(404).json({ error: 'Libro no encontrado' });
         }
-
-        // Registrar actividad en la bitácora
-        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        await logUserActivity(userId, `Se eliminó del catálogo el libro con ID: ${id}`, userIp);
 
         res.status(200).json({
             message: 'Libro eliminado con éxito',
