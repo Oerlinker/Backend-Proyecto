@@ -83,7 +83,7 @@ const deleteEdicion = async (id) => {
 module.exports = {
     createEdicion,
     getEdiciones,
-    getEdicionById,
+    getEdicionByISBN,
     updateEdicion,
     deleteEdicion
 };
