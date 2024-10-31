@@ -1,7 +1,7 @@
 const { createEdicion, getEdiciones, getEdicionByISBN, updateEdicion, deleteEdicion } = require('../models/edicionModel');
 
 const addEdicion = async (req, res) => {
-    const { isbn, numero_edicion, fecha_publicacion,libroid, proveedorid } = req.body;
+    const { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor } = req.body;
     try {
         const nuevaEdicion = await createEdicion({ isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor });
         res.status(201).json({
