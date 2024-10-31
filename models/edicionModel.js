@@ -3,7 +3,7 @@ const pool = require('../db');
 const createEdicion = async ({ isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor }) => {
     try {
         const result = await pool.query(
-            `INSERT INTO ediciones (isbn, numero_edicion, fecha_publicacion, libroid, proveedorid)
+            `INSERT INTO ediciones (isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor)
              VALUES (
                 $1, 
                 $2, 
