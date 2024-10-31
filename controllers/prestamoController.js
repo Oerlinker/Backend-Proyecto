@@ -13,7 +13,8 @@ const solicitarPrestamo = async (req, res) => {
             return res.status(400).json({ message: 'El libro ya está prestado'});
         }
         const nuevoPrestamo = await crearPrestamo(miembroid, edicionid, fechaDevolucion);
-        await logUserActivity(id, `Prestamo realizado de la edición: ${edicionid}`);
+        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        await logUserActivity(id, `Prestamo realizado de la edición: ${edicionid}`, userIp);
         return res.status(201).json({ message: 'Préstamo creado con éxito', prestamo: nuevoPrestamo });
     } catch (error) {
         console.error('Error al solicitar préstamo:', error);

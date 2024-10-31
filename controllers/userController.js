@@ -40,7 +40,6 @@ const prestamosDevolver = async (req, res) => {
 
     try {
         await devolverPrestamo(prestamoid); // Llama a la función del modelo
-        await logUserActivity(id, `Devolucion de prestamo de la edicion: ${edicionid}`);
         res.status(200).json({ message: 'Préstamo devuelto con éxito.' });
     } catch (error) {
         console.error('Error al devolver el préstamo:', error);
@@ -60,7 +59,8 @@ const registerUser = async (req, res) => {
         }
 
         const newUser = await createUser({ nombre, email, password,rolid });
-        await logUserActivity(newUser.usuarioid, 'Registro');
+        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        await logUserActivity(newUser.usuarioid, `Registro de nuevo usuario`, userIp);
         res.status(201).json({ message: 'Usuario registrado con éxito', user: newUser });
     } catch (error) {
         res.status(500).json({ message: 'Error en el registro', error });
@@ -111,7 +111,8 @@ const updateUserRoles = async (req, res) => {
 
     try {
         const updatedUser = await updateUserRole(userId, newRole);
-        await logUserActivity(userId, `Actualización de rol a ${newRole}`);
+        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        await logUserActivity(userId, `Actualización de rol a ${newRole}`, userIp);
         console.log('Usuario actualizado:', updatedUser);
         res.status(200).json({ message: 'Rol actualizado con éxito', user: updatedUser });
     } catch (error) {
@@ -139,7 +140,8 @@ const updateUserPassword = async (req, res) => {
 
         // Llama a la función del modelo para actualizar la contraseña en la base de datos
         await updatePassword(id, hashedPassword);
-        await logUserActivity(id, `Cambio de contraseña de usuario`);
+        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        await logUserActivity(id, 'Cambio de contraseña de usuario', userIp);
         res.status(200).json({ message: 'Contraseña actualizada con éxito' });
     } catch (error) {
         console.error('Error al actualizar la contraseña:', error);
@@ -157,7 +159,8 @@ const updateUserName = async (req, res) => {
         if (!updatedUser) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
-        await logUserActivity(userId, `Cambio de nombre de usuario a ${nombre}`);
+        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        await logUserActivity(userId, `Cambio de nombre de usuario a: ${nombre}`, userIp);
         res.status(200).json({ message: 'Nombre actualizado con éxito', user: updatedUser });
     } catch (error) {
         console.error('Error al actualizar el nombre del usuario:', error);
@@ -179,6 +182,8 @@ const updateUserCorreo = async (req, res) => {
         const correoActualizado = await updateCorreo(id, correo);
 
         if (correoActualizado) {
+            const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            await logUserActivity(id, `Cambio de correo a: ${correo}`, userIp);
             return res.status(200).json({ message: 'Correo actualizado exitosamente' });
         } else {
             return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -207,7 +212,8 @@ const createSubscriptionAndMember = async (req, res) => {
             estado: 'Activa'
         };
         await createSubscription(subscriptionData);
-
+        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        await logUserActivity(usuarioid, `Nuevo suscriptor/miembro`, userIp);
         res.status(201).json({message: 'Suscripción y miembro creados con éxito'});
     } catch (error) {
         console.error('Error creando la suscripción y miembro:', error);
