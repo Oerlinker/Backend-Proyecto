@@ -1,7 +1,7 @@
 const { crearPrestamo, registrarLibroPrestamo, obtenerPrestamos, getEdiciones, verificarDisponibilidadLibro, verificarDisponibilidadEdicion } = require('../models/prestamoModel');
 const { logUserActivity } = require('../models/userActivityLogModel');
 
-//richiculo
+
 // Crear un nuevo préstamo
 const solicitarPrestamo = async (req, res) => {
     const { id, miembroid, edicionid, fechaDevolucion } = req.body;
@@ -48,7 +48,6 @@ const isBookAvailable = async (req, res) => {
     }
 };
 
-//andreculo
 // Crear un nuevo préstamo
 const crearNuevoPrestamo = async (req, res) => {
     try {
