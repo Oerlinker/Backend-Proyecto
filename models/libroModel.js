@@ -184,6 +184,16 @@ const getBookDetails = async (id) => {
     return result.rows[0];
 };
 
+const getReseñasbyLibro = async (libroid) => {
+    try {
+        const result = await pool.query('SELECT * FROM reseña WHERE libroid = $1', [libroid]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error obteniendo las reseñas', error);
+        throw error;
+    }
+};
+
 module.exports = {
     createLibro,
     getLibros,
@@ -195,7 +205,8 @@ module.exports = {
     getCategorias,
     getLibroxCategoria,
     getBookDetails,
-    buscarLibrosAvanzado
+    buscarLibrosAvanzado,
+    getReseñasbyLibro
 };
 
 

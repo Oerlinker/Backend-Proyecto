@@ -1,4 +1,4 @@
-const { createLibro, getLibros, getLibroByName, updateLibro, deleteLibro,prestamo,getCategorias, getLibroxCategoria, getBookDetails, buscarLibrosAvanzado } = require('../models/libroModel');
+const { createLibro, getLibros, getLibroByName, updateLibro, deleteLibro,prestamo,getCategorias, getLibroxCategoria, getBookDetails, buscarLibrosAvanzado,getReseñasbyLibro } = require('../models/libroModel');
 
 // buscador avanzado
 const buscarLibros = async (req, res) => {
@@ -135,6 +135,17 @@ const searchLibros = async (req, res) => {
     }
 };
 
+const getReseñas = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const reseñas = await getReseñasbyLibro(id);
+        res.json(reseñas);
+    } catch (error) {
+        console.error('Error obteniendo las reseñas', error);
+        res.status(500).json({ error: 'Error obteniendo las reseñas' });
+    }
+}
+
 module.exports = {
     adLibro,
     getLibro,
@@ -144,5 +155,6 @@ module.exports = {
     , prestamosLibro,
     categorias,
     searchLibros,
-    buscarLibros
+    buscarLibros,
+    getReseñas
 };
