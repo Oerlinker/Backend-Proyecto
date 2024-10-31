@@ -1,4 +1,4 @@
-const{createEdicion,getEdiciones,getEdicionISBN,updateEdicion,deleteEdicion}=require('../models/edicionModel');
+const{createEdicion,getEdiciones,getEdicionbyISBN,updateEdicion,deleteEdicion, getEdicionByISBN}=require('../models/edicionModel');
 
 const addEdicion = async(req,res) =>{
     const{ isbn,numero_edicion,fecha_publicacion,libroid,proveedorid,total_prestamos,promedio_rating}=req.body;
@@ -39,7 +39,7 @@ const getEdicion=async(req,res)=>{
 const getEdicionISBN=async(req,res)=>{
     const{id}=req.params;
     try {
-        const edicion = await getEdicionById(isbn);
+        const edicion = await getEdicionByISBN(isbn);
         if (!edicion) {
             return res.status(404).json({ error: 'Edicion no encontrada' });
         }
