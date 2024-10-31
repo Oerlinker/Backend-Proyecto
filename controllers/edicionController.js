@@ -27,7 +27,7 @@ const getEdicion = async (req, res) => {
     }
 };
 
-const getEdicionesByISBN = async (req, res) => {
+const getEdicionByIdController = async (req, res) => {
     const { isbn } = req.params;
     try {
         const edicion = await getEdicionByISBN(isbn);
@@ -79,7 +79,7 @@ const delEdicion = async (req, res) => {
 module.exports = {
     addEdicion,
     getEdicion,
-    getEdicionesByISBN,
+    getEdicionByIdController,
     updEdicion,
     delEdicion
 };
