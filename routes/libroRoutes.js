@@ -25,7 +25,7 @@ router.delete('/libros/:id', delLibro);
 router.get('/api/categorias', libroController.categorias);
 
 //ruta de busqueda avanzada
-router.get('/search', buscarLibros);
+//router.get('/search', buscarLibros);
 
 
 module.exports = router;
