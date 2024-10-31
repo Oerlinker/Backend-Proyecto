@@ -15,7 +15,7 @@ router.get('/libros', getLibro);
 //ruta para el detalle del libro(bookDetaill.js)
 router.get('/libros/:id', libroController.getLibroById);
 //ruta para el busqueda de libro (books.js)
-router.get('/search', searchLibros);
+//router.get('/search', searchLibros);
 router.post('/libros', adLibro);
 
 router.get('api/review/libro:id', libroController.getReseñas);
@@ -26,7 +26,7 @@ router.delete('/libros/:id', delLibro);
 router.get('/api/categorias', libroController.categorias);
 
 //ruta de busqueda avanzada
-//router.get('/search', buscarLibros);
+router.get('/search', buscarLibros);
 
 
 module.exports = router;

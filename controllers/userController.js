@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 //hacer una reseña
 const hacerReseña = async (req, res) => {
-    const { miembroid, edicionid, libroid, calificacion, comentario } = req.body;
+    const { id, miembroid, edicionid, libroid, calificacion, comentario } = req.body;
 
     try {
         const newReseña = await setReseña(miembroid, edicionid, libroid, calificacion, comentario);
@@ -36,10 +36,11 @@ const prestamosActivos = async (req, res) => {
 
 //devolver prestamo manual
 const prestamosDevolver = async (req, res) => {
-    const { prestamoid } = req.params; // Cambiar de req.body a req.params
+    const { prestamoid, id, edicionid } = req.params; 
 
     try {
         await devolverPrestamo(prestamoid); // Llama a la función del modelo
+        await logUserActivity(id, `Devolucion de prestamo de la edicion: ${edicionid}`);
         res.status(200).json({ message: 'Préstamo devuelto con éxito.' });
     } catch (error) {
         console.error('Error al devolver el préstamo:', error);
