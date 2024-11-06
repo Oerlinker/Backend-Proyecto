@@ -1,13 +1,25 @@
+const jwt = require('jsonwebtoken');
+
 const verificarRol = (rolesPermitidos) => {
     return (req, res, next) => {
-        const userRoleId = req.user.rol;
-        if(!req.user||!req.user.rol){
-            return res.status(401).json({ mensaje: 'Acceso denegado' });
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ mensaje: 'Acceso denegado: No se proporcionó token' });
         }
-        if (!rolesPermitidos.includes(userRoleId)) {
-            return res.status(403).json({ mensaje: 'Acceso denegado' });
+
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            req.user = decoded;
+
+            const userRoleId = req.user.rol;
+            if (!rolesPermitidos.includes(userRoleId)) {
+                return res.status(403).json({ mensaje: 'Acceso denegado: No tiene el rol adecuado' });
+            }
+
+            next();
+        } catch (error) {
+            return res.status(401).json({ mensaje: 'Token inválido' });
         }
-        next();
     };
 };
 
