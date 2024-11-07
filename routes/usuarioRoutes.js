@@ -36,7 +36,5 @@ router.post('/users/review', hacerReseña);
 
 router.get('/users/members/', getMember);
 
-//ruta de obtener user por id
-router.get('/users/:id', getByidController);
 
 module.exports = router;
