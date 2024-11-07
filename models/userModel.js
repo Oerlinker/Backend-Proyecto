@@ -159,6 +159,15 @@ const getMembers = async () => {
     }
 };
 
+const getuserbyid = async (id) => {
+    try {
+        const result = await pool.query('SELECT * FROM Usuario WHERE usuarioid = $1', [id]);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error obteniendo el usuario', error);
+        throw error;
+    }
+};
 
 
 module.exports = {
@@ -174,5 +183,6 @@ module.exports = {
     getPrestamosActivos,
     devolverPrestamo,
     setReseña,
-    getMembers
+    getMembers,
+    getuserbyid
 };

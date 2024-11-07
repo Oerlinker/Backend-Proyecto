@@ -36,5 +36,7 @@ router.post('/users/review', hacerReseña);
 
 router.get('/users/members/', getMember);
 
+router.get('/users/:id', getByidController);
+
 
 module.exports = router;

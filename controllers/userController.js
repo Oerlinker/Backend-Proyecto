@@ -1,4 +1,4 @@
-const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription, getPrestamosActivos, devolverPrestamo, setReseña,getMembers } = require('../models/userModel');
+const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription, getPrestamosActivos, devolverPrestamo, setReseña,getMembers,getuserbyid } = require('../models/userModel');
 const { logUserActivity } = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -229,6 +229,24 @@ const getMember = async (req, res) => {
         res.status(500).json({ message: 'Error obteniendo los miembros', error });
     }
 }
+const getByidController = async (req, res) => {
+    const { id } = req.params;
+
+    if (!id || isNaN(parseInt(id))) {
+        return res.status(400).json({ message: 'ID invalido' });
+    }
+
+    try {
+        const user = await getuserbyid(id);
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error obteniendo usuario por ID:', error);
+        res.status(500).json({ error: 'Error obteniendo usuario por  ID' });
+    }
+};
 module.exports = {
     registerUser,
     loginUser,
@@ -242,6 +260,7 @@ module.exports = {
    prestamosDevolver, 
    hacerReseña,
     getMember,
+    getByidController
 
 };
 
