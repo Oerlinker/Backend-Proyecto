@@ -11,8 +11,6 @@ const edicionesRoutes = require('./routes/edicionesRoutes');
 const prestamoRoutes = require('./routes/prestamoRoutes');
 const proveedorRoutes = require('./routes/proveedorRoutes');
 const logRoutes = require('./routes/logRoutes');
-const verificarRol = require('./middleware/verificarRol');
-
 dotenv.config();
 
 const app = express();
