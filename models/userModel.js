@@ -159,6 +159,16 @@ const getMembers = async () => {
     }
 };
 
+const getByid = async (id) => {
+    try {
+        const result = await pool.query('SELECT * FROM Usuario WHERE usuarioid = $1', [id]);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error obteniendo el usuario por id', error);
+        throw error;
+    }
+};
+
 module.exports = {
     createUser,
     createSubscription,
@@ -173,4 +183,5 @@ module.exports = {
     devolverPrestamo,
     setReseña,
     getMembers,
+    getByid
 };

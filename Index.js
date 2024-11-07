@@ -11,7 +11,7 @@ const edicionesRoutes = require('./routes/edicionesRoutes');
 const prestamoRoutes = require('./routes/prestamoRoutes');
 const proveedorRoutes = require('./routes/proveedorRoutes');
 const logRoutes = require('./routes/logRoutes');
-//const verificarRol = require('./middleware/verificarRol');
+const verificarRol = require('./middleware/verificarRol');
 
 dotenv.config(); // Cargar variables del archivo .env
 
@@ -40,6 +40,9 @@ app.use('/api', prestamoRoutes);
 app.use('/api', userRoutes);
 app.use('/api',edicionesRoutes);
 
+app.use('/api/admin', verificarRol([4]), (req,res) => {
+res.send('Bienvenido admin');
+});
 
 
 
