@@ -40,7 +40,7 @@ app.use('/api', prestamoRoutes);
 app.use('/api', userRoutes);
 app.use('/api',edicionesRoutes);
 
-app.use('/api/admin', verificarRol([4]), (req,res) => {
+app.use('/api/admin/agregar-libro', verificarRol([4]), (req,res) => {
 res.send('Bienvenido admin');
 });
 
