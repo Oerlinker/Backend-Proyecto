@@ -9,24 +9,21 @@ const {
 
 } = require('../controllers/libroController');
 const libroController = require('../controllers/libroController');
+const verificarRol = require("../middleware/verificarRol");
 const router = express.Router();
-
+//public routes
 router.get('/libros', getLibro);
-//ruta para el detalle del libro(bookDetaill.js)
 router.get('/libros/:id', libroController.getLibroById);
-//ruta para el busqueda de libro (books.js)
-//router.get('/search', searchLibros);
-router.post('/libros', adLibro);
-
-router.get('api/review/libro:id', libroController.getReseñas);
-
-router.put('/libros/:id',updLibro);
-router.delete('/libros/:id', delLibro);
-//ruta para sacar todas la categorias (books.js)
-router.get('/api/categorias', libroController.categorias);
-
-//ruta de busqueda avanzada
+router.get('/api/api/categorias', libroController.categorias);
 router.get('/search', buscarLibros);
+
+
+//protected routes
+router.post('/libros',verificarRol([4]), adLibro);
+router.get('api/review/libro:id',verificarRol([2,4]), libroController.getReseñas);
+router.put('/libros/:id',verificarRol([4]),updLibro);
+router.delete('/libros/:id',verificarRol([4]), delLibro);
+
 
 
 module.exports = router;

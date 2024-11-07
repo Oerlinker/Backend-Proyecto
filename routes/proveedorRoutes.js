@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { addProveedor, getProveedor, updProveedor, delProveedor, getProveedorByIdController} = require('../controllers/proveedorController');
-
-router.post('/proveedores', addProveedor);
-router.get('/proveedores', getProveedor);
-router.get('/proveedores/:id', getProveedorByIdController);
-router.put('/proveedores/:id', updProveedor);
-router.delete('/proveedores/:id', delProveedor);
+const verificarRol = require('../middleware/verificarRol');
+const {decodeToken} = require('../helpers/generateToken');
+//protecte routes
+router.post('/proveedores',verificarRol([4]), addProveedor);
+router.get('/proveedores',verificarRol([4]), getProveedor);
+router.get('/proveedores/:id',verificarRol([4]), getProveedorByIdController);
+router.put('/proveedores/:id',verificarRol([4]), updProveedor);
+router.delete('/proveedores/:id',verificarRol([4]), delProveedor);
 
 module.exports = router;

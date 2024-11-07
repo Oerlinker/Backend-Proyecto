@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const verificarToken = (req, res, next) => {
-    const token = req.header('x-auth-token'); // O el nombre del encabezado que estás usando para el token
+    const token = req.header('x-auth-token');
 
     if (!token) {
         return res.status(401).json({ mensaje: 'No se encontró el token, acceso denegado' });

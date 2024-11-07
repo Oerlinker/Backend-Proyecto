@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+const {verifyToken} = require('../helpers/generateToken');
 const verificarRol = (rolesPermitidos) => {
     return (req, res, next) => {
         const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
@@ -8,7 +8,7 @@ const verificarRol = (rolesPermitidos) => {
         }
 
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = verifyToken(token, process.env.JWT_SECRET);
             req.user = decoded;
 
             const userRoleId = req.user.rol;

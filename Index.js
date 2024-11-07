@@ -13,7 +13,7 @@ const proveedorRoutes = require('./routes/proveedorRoutes');
 const logRoutes = require('./routes/logRoutes');
 const verificarRol = require('./middleware/verificarRol');
 
-dotenv.config(); // Cargar variables del archivo .env
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;

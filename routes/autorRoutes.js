@@ -2,20 +2,14 @@
 const express = require('express');
 const router = express.Router();
 const { addAutor, getAutor, getAutorByIdController, updAutor, delAutor } = require('../controllers/autorController');
+const verficarRol = require("../middleware/verificarRol");
 
-// Ruta para crear un nuevo autor
-router.post('/autores', addAutor);
 
-// Ruta para obtener todos los autores
-router.get('/autores', getAutor);
-
-// Ruta para obtener un autor por su ID
-router.get('/autores/:id', getAutorByIdController);
-
-// Ruta para actualizar un autor por su ID
-router.put('/autores/:id', updAutor);
-
-// Ruta para eliminar un autor por su ID
-router.delete('/autores/:id', delAutor);
+//protected routes
+router.post('/autores',verficarRol([4]), addAutor);
+router.get('/autores',verficarRol([4]), getAutor);
+router.get('/autores/:id',verficarRol([4]), getAutorByIdController);
+router.put('/autores/:id',verficarRol([4]), updAutor);
+router.delete('/autores/:id',verficarRol([4]), delAutor);
 
 module.exports = router;
