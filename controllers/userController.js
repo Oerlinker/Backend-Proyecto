@@ -230,7 +230,7 @@ const getMember = async (req, res) => {
     }
 }
 
-const getByid = async (req, res) => {
+const getByidController = async (req, res) => {
     const { id } = req.params;
     try {
         const user = await getByid(id);
@@ -256,7 +256,7 @@ module.exports = {
    prestamosDevolver, 
    hacerReseña,
     getMember,
-    getByid
+    getByidController
 };
 
 

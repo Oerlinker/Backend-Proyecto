@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, updateUserName, updateUserPassword, createSubscriptionAndMember, prestamosActivos, prestamosDevolver, hacerReseña,
-    getMember, getByid
+    getMember,
+    getByidController
 } = require('../controllers/userController');
 
 // Ruta para registrar un usuario
@@ -35,7 +36,7 @@ router.post('/users/review', hacerReseña);
 
 router.get('/users/members/', getMember);
 
-//ruta de obtener miembro por id
-router.get('/users/users/:id', getByid);
+//ruta de obtener user por id
+router.get('/users:id', getByidController);
 
 module.exports = router;
