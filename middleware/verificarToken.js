@@ -8,8 +8,7 @@ const verificarToken = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, 'secretKey'); // Debe ser la misma clave secreta que usaste para firmar el token
-        req.user = decoded; // Adjunta el usuario decodificado a req.user
+        req.user = jwt.verify(token, process.env.JWT_SECRET);
         next();
     } catch (err) {
         res.status(400).json({ mensaje: 'Token no válido' });
