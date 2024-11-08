@@ -90,7 +90,7 @@ const loginUser = async (req, res) => {
         }
 
         // Generar el token JWT
-        const token = tokenSing({ id: user.usuarioid, miembroid: user.miembroid, nombre: user.nombre_usuario, correo: user.correo_electronico, rol: user.rolid }, 'secretKey', { expiresIn: '1h' });
+        const token = tokenSing({ id: user.usuarioid, miembroid: user.miembroid, nombre: user.nombre_usuario, correo: user.correo_electronico, rol: user.rolid }, '1h');
         console.log("Token generado:", token);
 
         const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
