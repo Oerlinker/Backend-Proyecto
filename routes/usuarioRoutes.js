@@ -8,11 +8,11 @@ const verificarTokenYRol = require("../middleware/verificarTokenYRol");
 //public routes
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.post('/create-subscription', createSubscriptionAndMember);
 
 
 //protected routes
 router.get('/users',verificarTokenYRol([4]), getUser);
-router.post('/create-subscription',verificarTokenYRol([1]), createSubscriptionAndMember);
 router.put('/users/name/:id',verificarTokenYRol([1,2,3,4]), updateUserName);
 router.put('/users/email/:id',verificarTokenYRol([1,2,3,4]), updateUserCorreo);
 router.put('/users/password/:id',verificarTokenYRol([1,2,3,4]), updateUserPassword);
