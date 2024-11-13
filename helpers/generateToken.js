@@ -1,17 +1,16 @@
 const jwt = require('jsonwebtoken');
 
 
-const secretKey = 'secretKey';
-
 const tokenSing = (payload, expiresIn = '1h') => {
-    return jwt.sign(payload, secretKey, {expiresIn});
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 };
 
 const verifyToken = async (token) => {
     try {
-        return jwt.verify(token,proccess.env.JWT_SECRET);
+        // Corregir error tipográfico en process.env
+        return jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
-        throw new Error('token no valido');
+        throw new Error('Token no válido');
     }
 };
 
@@ -19,4 +18,4 @@ const decodeToken = (token) => {
     return jwt.decode(token);
 };
 
-module.exports = {tokenSing, verifyToken, decodeToken};
+module.exports = { tokenSing, verifyToken, decodeToken };

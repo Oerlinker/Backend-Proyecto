@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken'); // Importación de jsonwebtoken
+const jwt = require('jsonwebtoken');
 
 const verificarTokenYRol = (rolesPermitidos) => (req, res, next) => {
     const authHeader = req.header('Authorization');
