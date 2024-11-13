@@ -17,10 +17,11 @@ const setReseña = async (miembroid, edicionid, libroid, calificacion, comentari
 const getPrestamosActivos = async (id) => {
     try {
         const prestamos = await pool.query(`
-            SELECT p.prestamoid, l.libroid, l.titulo, e.edicionid, e.numero_edicion, fecha_devolucion
-            FROM prestamos p, ediciones e, libros l
-            WHERE miembroid = $1 AND estado = 'activo' 
-            and p.edicionid = e.edicionid and e.libroid = l.libroid
+            SELECT p.prestamoid, l.libroid, l.titulo, e.edicionid, e.numero_edicion, p.fecha_devolucion
+            FROM prestamos p
+            JOIN ediciones e ON p.edicionid = e.edicionid
+            JOIN libros l ON e.libroid = l.libroid
+            WHERE p.miembroid = $1 AND p.estado = 'activo'
 
         `, [id]);
         return prestamos.rows;
