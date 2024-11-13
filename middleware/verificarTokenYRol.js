@@ -1,4 +1,5 @@
-// middleware/verificarTokenYRol.js
+const jwt = require('jsonwebtoken'); // Importación de jsonwebtoken
+
 const verificarTokenYRol = (rolesPermitidos) => (req, res, next) => {
     const authHeader = req.header('Authorization');
     const token = authHeader && authHeader.split(' ')[1];
