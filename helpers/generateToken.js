@@ -7,7 +7,6 @@ const tokenSing = (payload, expiresIn = '1h') => {
 
 const verifyToken = async (token) => {
     try {
-        // Corregir error tipográfico en process.env
         return jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
         throw new Error('Token no válido');

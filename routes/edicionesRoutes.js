@@ -6,8 +6,8 @@ const verificarTokenYRol = require("../middleware/verificarTokenYRol");
 
 //protected routes
 router.post('/ediciones',verificarTokenYRol([4]), addEdicion);
-router.get('/ediciones',verificarTokenYRol([4]), getEdicion);
-router.get('/ediciones/:id',verificarTokenYRol([4]), getEdicionByIdController);
+router.get('/ediciones',verificarTokenYRol([2,3,4]), getEdicion);
+router.get('/ediciones/:id',verificarTokenYRol([2,3,4]), getEdicionByIdController);
 router.put('/ediciones/:id',verificarTokenYRol([4]), updEdicion);
 router.delete('/ediciones/:id',verificarTokenYRol([4]), delEdicion);
 

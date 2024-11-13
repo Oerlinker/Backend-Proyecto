@@ -6,8 +6,8 @@ const verificarTokenYRol = require("../middleware/verificarTokenYRol");
 
 //protecte routes
 router.post('/proveedores',verificarTokenYRol([4]), addProveedor);
-router.get('/proveedores',verificarTokenYRol([4]), getProveedor);
-router.get('/proveedores/:id',verificarTokenYRol([4]), getProveedorByIdController);
+router.get('/proveedores',verificarTokenYRol([2,3,4]), getProveedor);
+router.get('/proveedores/:id',verificarTokenYRol([2,3,4]), getProveedorByIdController);
 router.put('/proveedores/:id',verificarTokenYRol([4]), updProveedor);
 router.delete('/proveedores/:id',verificarTokenYRol([4]), delProveedor);
 

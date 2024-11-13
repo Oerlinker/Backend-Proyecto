@@ -16,11 +16,11 @@ router.get('/libros', getLibro);
 router.get('/libros/:id', libroController.getLibroById);
 router.get('/api/api/categorias', libroController.categorias);
 router.get('/search', buscarLibros);
+router.get('api/review/libro:id', libroController.getReseñas);
 
 
 //protected routes
 router.post('/libros',verificarTokenYRol([4]), adLibro);
-router.get('api/review/libro:id',verificarTokenYRol([4]), libroController.getReseñas);
 router.put('/libros/:id',verificarTokenYRol([4]),updLibro);
 router.delete('/libros/:id',verificarTokenYRol([4]), delLibro);
 

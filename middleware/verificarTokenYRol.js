@@ -15,7 +15,7 @@ const verificarTokenYRol = (rolesPermitidos) => (req, res, next) => {
 
         if (!rolesPermitidos.includes(decoded.rol)) {
             console.log("Rol no permitido:", decoded.rol);
-            return res.status(403).json({ mensaje: 'Acceso denegado por rol insuficiente' });
+            return res.status(403).json({ mensaje: 'Acceso denegado por puto' });
         }
 
         req.user = decoded;
