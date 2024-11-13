@@ -1,7 +1,9 @@
+// verificarToken.js
 const jwt = require('jsonwebtoken');
 
 const verificarToken = (req, res, next) => {
-    const token = req.header('x-auth-token');
+    const authHeader = req.header('Authorization');
+    const token = authHeader && authHeader.split(' ')[1]; // Extrae el token después de "Bearer"
 
     if (!token) {
         return res.status(401).json({ mensaje: 'No se encontró el token, acceso denegado' });

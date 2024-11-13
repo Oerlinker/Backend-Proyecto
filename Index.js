@@ -20,8 +20,7 @@ const port = process.env.PORT || 3000;
 app.use(cors({
     origin: '*', // Permitir solicitudes de cualquier origen
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'x-auth-token'],
-    credentials : true
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
