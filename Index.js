@@ -16,13 +16,22 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Configuración de multer para manejar archivos PDF
+const upload = multer({
+    limits: { fileSize: 50 * 1024 * 1024 }, // Limitar el tamaño del archivo a 50MB
+    dest: 'uploads/', // Carpeta donde se guardan los archivos temporalmente
+}).single('pdf');  // Usamos 'single' para aceptar un solo archivo, puedes cambiarlo si es necesario
+
+
 // Middleware
 app.use(cors({
     origin: '*', // Permitir solicitudes de cualquier origen
     methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json());
+// Aumentamos el límite de tamaño de los datos JSON
+app.use(express.json({ limit: '50mb' }));  // Aumentar el límite de datos JSON a 50MB
+app.use(express.urlencoded({ limit: '50mb', extended: true }));  // Aumentar el límite para formularios URL-encoded
 
 // Rutas
 app.use('/api', logActivity('viewed ediciones'), edicionesRoutes);
