@@ -1,34 +1,4 @@
 const pool = require('../db');
-const fs = require('fs');
-const AWS = require('aws-sdk');
-
-const s3 = new AWS.S3();
-
-AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION,
-});
-
-const uploadPdf = async (pdfFile) => {
-    const fileContent = fs.readFileSync(pdfFile.path);
-    const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `ediciones/${Date.now()}_${pdfFile.name}`, // El nombre del archivo PDF
-        Body: fileContent,
-        ContentType: pdfFile.mimetype,
-        ACL: 'public-read', // Hacer el archivo accesible públicamente
-    };
-
-    try {
-        const data = await s3.upload(params).promise();
-        return data.Location; // URL pública del archivo en S3
-    } catch (error) {
-        console.error('Error subiendo el archivo PDF a S3', error);
-        throw error;
-    }
-};
-
 
 // add PDF
 const createEdicion = async ({ isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfFile }) => {
@@ -89,22 +59,57 @@ const getEdicionByISBN = async (isbn) => {
     }
 };
 
-const updateEdicion = async (id, { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfFile }) => {
+const updateEdicion = async ({isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfFile}) => {
     try {
-        let pdfUrl = null;
-        if (pdfFile) {
-            const uploadResult = await uploadPdf(pdfFile);
-            pdfUrl = uploadResult.Location;
+
+        const pdfData = pdfFile ? pdfFile.buffer : null;
+
+
+        const fields = [];
+        const values = [];
+        let idx = 1;
+
+
+        if (fecha_publicacion) {
+            fields.push(`fecha_publicacion = $${idx}`);
+            values.push(fecha_publicacion);
+            idx++;
+        }
+        if (titulo_libro) {
+            fields.push(`libroid = (SELECT libroid FROM libros WHERE titulo = $${idx})`);
+            values.push(titulo_libro);
+            idx++;
+        }
+        if (nombre_proveedor) {
+            fields.push(`proveedorid = (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $${idx})`);
+            values.push(nombre_proveedor);
+            idx++;
+        }
+        if (pdfData) {
+            fields.push(`archivo_pdfbyte = $${idx}`);
+            values.push(pdfData);
+            idx++;
         }
 
-        const result = await pool.query(
-            `UPDATE ediciones SET isbn = $1, numero_edicion = $2, fecha_publicacion = $3, libroid = (SELECT libroid FROM libros WHERE titulo = $4), proveedorid = (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $5), archivo_pdfbyte = COALESCE($6, archivo_pdfbyte)
-             WHERE edicionid = $7 RETURNING *`,
-            [isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfUrl, id]
-        );
+
+        if (fields.length === 0) {
+            throw new Error('No fields to update');
+        }
+
+
+        values.push(isbn, numero_edicion);
+        const query = `
+            UPDATE ediciones
+            SET ${fields.join(', ')}
+            WHERE isbn = $${idx} AND numero_edicion = $${idx + 1}
+            RETURNING *
+        `;
+
+
+        const result = await pool.query(query, values);
         return result.rows[0];
     } catch (error) {
-        console.error('Error actualizando la edición', error);
+        console.error('Error updating the edition', error);
         throw error;
     }
 };
