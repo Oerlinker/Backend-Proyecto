@@ -4,11 +4,16 @@ const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3();
 
+AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
+});
 
 const uploadPdf = async (pdfFile) => {
     const fileContent = fs.readFileSync(pdfFile.path);
     const params = {
-        Bucket: 'biblioteca-virtual-pdfs', // El nombre de tu bucket de S3
+        Bucket: process.env.AWS_BUCKET_NAME,
         Key: `ediciones/${Date.now()}_${pdfFile.name}`, // El nombre del archivo PDF
         Body: fileContent,
         ContentType: pdfFile.mimetype,
@@ -113,5 +118,6 @@ module.exports = {
     getEdiciones,
     getEdicionByISBN,
     updateEdicion,
-    deleteEdicion
+    deleteEdicion,
+    uploadPdf
 };
