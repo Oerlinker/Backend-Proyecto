@@ -54,6 +54,16 @@ app.get('/', (req, res) => {
     res.send('juany ta gozu!');
 });
 
+// Ruta para subir PDF, usando el middleware de multer
+app.post('/api/subir-pdf', upload, (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No se ha subido ningún archivo.');
+    }
+    // Aquí puedes hacer lo que necesites con el archivo subido
+    console.log('Archivo subido:', req.file);
+    res.send('Archivo PDF subido correctamente');
+});
+
 app.listen(port, () => {
     console.log(`Servidor corriendo en ${port}`);
 });
