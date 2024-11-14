@@ -2,10 +2,9 @@ const { createEdicion, getEdiciones, getEdicionByISBN, updateEdicion, deleteEdic
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' }); //almacenamiento
 
-
 const addEdicion = async (req, res) => {
     const { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor } = req.body;
-    const archivo_pdf = req.file; // Obtener el archivo PDF del formulario
+    const pdfFile = req.file; // Obtener el archivo PDF del formulario
     console.log('isbn:', isbn);
     console.log('numero_edicion:', numero_edicion);
     console.log('fecha_publicacion:', fecha_publicacion);
@@ -18,7 +17,7 @@ const addEdicion = async (req, res) => {
             fecha_publicacion,
             titulo_libro,
             nombre_proveedor,
-            archivo_pdf
+            pdfFile
         });
         res.status(201).json({
             message: 'Edición agregada con éxito',
