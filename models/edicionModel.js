@@ -1,17 +1,46 @@
 const pool = require('../db');
+const path = require('path');
+const fs = require('fs');
+const AWS = require('aws-sdk');
 
-const createEdicion = async ({ isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor }) => {
+const s3 = new AWS.S3();
+
+
+const uploadPdf = async (pdfFile) => {
+    const fileContent = fs.readFileSync(pdfFile.path);
+    const params = {
+        Bucket: 'your-bucket-name', // El nombre de tu bucket de S3
+        Key: `ediciones/${Date.now()}_${pdfFile.name}`, // El nombre del archivo PDF
+        Body: fileContent,
+        ContentType: pdfFile.mimetype,
+        ACL: 'public-read', // Hacer el archivo accesible públicamente
+    };
+
     try {
+        const data = await s3.upload(params).promise();
+        return data.Location; // URL pública del archivo en S3
+    } catch (error) {
+        console.error('Error subiendo el archivo PDF a S3', error);
+        throw error;
+    }
+};
+
+
+// add PDF
+const createEdicion = async ({ isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfFile }) => {
+    try {
+        const pdfUrl = pdfFile ? await uploadPdf(pdfFile) : null;
         const result = await pool.query(
-            `INSERT INTO ediciones (isbn, numero_edicion, fecha_publicacion, libroid, proveedorid)
+            `INSERT INTO ediciones (isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, archivo_pdf)
              VALUES (
                 $1, 
                 $2, 
                 $3, 
                 (SELECT libroid FROM libros WHERE titulo = $4), 
-                (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $5)
+                (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $5),
+                $6
              ) RETURNING *`,
-            [isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor]
+            [isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfUrl]
         );
         return result.rows[0];
     } catch (error) {
