@@ -1,3 +1,4 @@
+const pool = require('../db');
 const { createEdicion, getEdiciones, getEdicionByISBN, updateEdicion, deleteEdicion } = require('../models/edicionModel');
 
 const addEdicion = async (req, res) => {
