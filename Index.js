@@ -11,6 +11,7 @@ const edicionesRoutes = require('./routes/edicionesRoutes');
 const prestamoRoutes = require('./routes/prestamoRoutes');
 const proveedorRoutes = require('./routes/proveedorRoutes');
 const logRoutes = require('./routes/logRoutes');
+const multer = require('multer');
 dotenv.config();
 
 const app = express();
