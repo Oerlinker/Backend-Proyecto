@@ -16,7 +16,7 @@ router.get('/libros', getLibro);
 router.get('/libros/:id', libroController.getLibroById);
 router.get('/api/api/categorias', libroController.categorias);
 router.get('/search', buscarLibros);
-router.get('api/review/libro:id', libroController.getReseñas);
+router.get('/review/libros/:id', libroController.getReseñas);
 
 
 //protected routes
