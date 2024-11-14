@@ -33,9 +33,9 @@ const uploadPdf = async (pdfFile) => {
 // add PDF
 const createEdicion = async ({ isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfFile }) => {
     try {
-        const pdfUrl = pdfFile ? await uploadPdf(pdfFile) : null;
+        const pdfData = pdfFile ? pdfFile.buffer : null; // Guardar el archivo en formato binario
         const result = await pool.query(
-            `INSERT INTO ediciones (isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, archivo_pdf)
+            `INSERT INTO ediciones (isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, archivo_pdfbyte)
              VALUES (
                 $1, 
                 $2, 
@@ -44,7 +44,7 @@ const createEdicion = async ({ isbn, numero_edicion, fecha_publicacion, titulo_l
                 (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $5),
                 $6
              ) RETURNING *`,
-            [isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfUrl]
+            [isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfData]
         );
         return result.rows[0];
     } catch (error) {

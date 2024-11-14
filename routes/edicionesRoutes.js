@@ -1,31 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
-const { addEdicion,getEdicion,getEdicionByIdController,updEdicion,delEdicion} = require('../controllers/edicionController');
+const { addEdicion,getEdicion,getEdicionByIdController,updEdicion,delEdicion,getPdf} = require('../controllers/edicionController');
 const verificarTokenYRol = require("../middleware/verificarTokenYRol");
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // directorio donde se guardarán los archivos temporales
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}_${file.originalname}`); // Nombre único para evitar conflictos
-    }
-});
 
-const upload = multer({ storage: storage });
+
 
 //protected routes
-router.post('/ediciones',verificarTokenYRol([4]), addEdicion);
+router.post('/ediciones', verificarTokenYRol([4]), upload.single('pdf'), addEdicion);
 router.get('/ediciones',verificarTokenYRol([2,3,4]), getEdicion);
 router.get('/ediciones/:id',verificarTokenYRol([2,3,4]), getEdicionByIdController);
 router.put('/ediciones/:id',verificarTokenYRol([4]), updEdicion);
 router.delete('/ediciones/:id',verificarTokenYRol([4]), delEdicion);
+router.get('/ediciones/download-pdf/:id', verificarTokenYRol([2,3,4]), getPdf);
 
 
 // Ruta para subir el archivo PDF de una edición
-router.post('/ediciones/upload-pdf/:id', verificarTokenYRol([4]), upload.single('pdf'), (req, res) => {
+/*router.post('/ediciones/upload-pdf/:id', verificarTokenYRol([4]), upload.single('pdf'), (req, res) => {
     try {
         // Aquí puedes agregar la lógica para guardar la URL del archivo en la base de datos
         const pdfFile = req.file;
@@ -43,6 +35,6 @@ router.post('/ediciones/upload-pdf/:id', verificarTokenYRol([4]), upload.single(
         console.error('Error subiendo el archivo PDF', error);
         res.status(500).json({ error: 'Error al subir el archivo PDF' });
     }
-});
+}); */
 
 module.exports = router;

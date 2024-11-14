@@ -5,11 +5,7 @@ const upload = multer({ dest: 'uploads/' }); //almacenamiento
 const addEdicion = async (req, res) => {
     const { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor } = req.body;
     const pdfFile = req.file; // Obtener el archivo PDF del formulario
-    console.log('isbn:', isbn);
-    console.log('numero_edicion:', numero_edicion);
-    console.log('fecha_publicacion:', fecha_publicacion);
-    console.log('titulo_libro:', titulo_libro);
-    console.log('nombre_proveedor:', nombre_proveedor);
+
     try {
         const nuevaEdicion = await createEdicion({
             isbn,
@@ -26,6 +22,30 @@ const addEdicion = async (req, res) => {
     } catch (error) {
         console.error('Error agregando la edición', error);
         res.status(500).json({ error: 'Error agregando la edición' });
+    }
+};
+
+// Controlador para obtener el PDF
+const getPdf = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const result = await pool.query(
+            `SELECT archivo_pdfbyte FROM ediciones WHERE edicionid = $1`,
+            [id]
+        );
+        const edicion = result.rows[0];
+
+        if (!edicion || !edicion.archivo_pdfbyte) {
+            return res.status(404).json({ message: 'PDF no encontrado' });
+        }
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="archivo.pdf"');
+        res.send(edicion.archivo_pdfbyte);
+    } catch (error) {
+        console.error('Error obteniendo PDF:', error);
+        res.status(500).json({ error: 'Error obteniendo PDF' });
     }
 };
 
@@ -97,6 +117,7 @@ module.exports = {
     getEdicionByIdController,
     updEdicion,
     delEdicion,
-    upload
+    upload,
+    getPdf
 };
 
