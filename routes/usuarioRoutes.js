@@ -11,7 +11,7 @@ router.post('/create-subscription', createSubscriptionAndMember);
 router.get('/users/prestamos/activos/:miembroid', prestamosActivos);
 
 //protected routes
-router.post('/login',verificarTokenYRol([1,2,3,4]), loginUser);
+router.post('/login', loginUser);
 router.get('/users',verificarTokenYRol([4]), getUser);
 router.put('/users/name/:id',verificarTokenYRol([1,2,3,4]), updateUserName);
 router.put('/users/email/:id',verificarTokenYRol([1,2,3,4]), updateUserCorreo);
