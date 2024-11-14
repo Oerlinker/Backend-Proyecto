@@ -77,8 +77,10 @@ const getEdicionByIdController = async (req, res) => {
 const updEdicion = async (req, res) => {
     const { id } = req.params;
     const { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor } = req.body;
+    const pdfFile = req.file;
+
     try {
-        const edicionActualizada = await updateEdicion(id, { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor });
+        const edicionActualizada = await updateEdicion(id, { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfFile });
         if (!edicionActualizada) {
             return res.status(404).json({ error: 'Edicion no encontrada' });
         }

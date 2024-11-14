@@ -12,7 +12,7 @@ const verificarTokenYRol = require("../middleware/verificarTokenYRol");
 router.post('/ediciones', verificarTokenYRol([4]), upload.single('pdf'), addEdicion);
 router.get('/ediciones', verificarTokenYRol([2,3,4]), getEdicion);
 router.get('/ediciones/:id', verificarTokenYRol([2,3,4]), getEdicionByIdController);
-router.put('/ediciones/:id', verificarTokenYRol([4]), updEdicion);
+router.put('/ediciones/:id', verificarTokenYRol([4]), upload.single('pdf'), updEdicion);
 router.delete('/ediciones/:id', verificarTokenYRol([4]), delEdicion);
 router.get('/ediciones/download-pdf/:id', verificarTokenYRol([2]), getPdf);
 

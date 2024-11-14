@@ -89,12 +89,13 @@ const getEdicionByISBN = async (isbn) => {
     }
 };
 
-const updateEdicion = async (id, { isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating }) => {
+const updateEdicion = async (id, { isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating, pdfFile }) => {
     try {
+        const pdfData = pdfFile ? pdfFile.buffer : null;
         const result = await pool.query(
-            `UPDATE ediciones SET isbn = $1, numero_edicion = $2, fecha_publicacion = $3, libroid = $4, proveedorid = $5, total_prestamos = $6, promedio_rating = $7
-             WHERE edicionid = $8 RETURNING *`,
-            [isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating, id]
+            `UPDATE ediciones SET isbn = $1, numero_edicion = $2, fecha_publicacion = $3, libroid = $4, proveedorid = $5, total_prestamos = $6, promedio_rating = $7, archivo_pdfbyte = COALESCE($8, archivo_pdfbyte)
+             WHERE edicionid = $9 RETURNING *`,
+            [isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating, pdfData, id]
         );
         return result.rows[0];
     } catch (error) {
