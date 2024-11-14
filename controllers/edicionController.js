@@ -4,7 +4,7 @@ const upload = multer({ dest: 'uploads/' }); //almacenamiento
 
 const addEdicion = async (req, res) => {
     const { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor } = req.body;
-    const pdfFile = req.file; // Obtener el archivo PDF del formulario
+    const pdfFile = req.file;
 
     try {
         const nuevaEdicion = await createEdicion({
@@ -25,7 +25,6 @@ const addEdicion = async (req, res) => {
     }
 };
 
-// Controlador para obtener el PDF
 const getPdf = async (req, res) => {
     const { id } = req.params;
 
@@ -117,7 +116,6 @@ module.exports = {
     getEdicionByIdController,
     updEdicion,
     delEdicion,
-    upload,
     getPdf
 };
 
