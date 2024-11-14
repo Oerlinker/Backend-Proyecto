@@ -93,7 +93,6 @@ const updEdicion = async (req, res) => {
         res.status(500).json({ error: 'Error actualizando la edicion' });
     }
 };
-
 const delEdicion = async (req, res) => {
     const { id } = req.params;
     try {

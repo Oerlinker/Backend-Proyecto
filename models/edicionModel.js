@@ -89,13 +89,18 @@ const getEdicionByISBN = async (isbn) => {
     }
 };
 
-const updateEdicion = async (id, { isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating, pdfFile }) => {
+const updateEdicion = async (id, { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfFile }) => {
     try {
-        const pdfData = pdfFile ? pdfFile.buffer : null;
+        let pdfUrl = null;
+        if (pdfFile) {
+            const uploadResult = await uploadPdf(pdfFile);
+            pdfUrl = uploadResult.Location;
+        }
+
         const result = await pool.query(
-            `UPDATE ediciones SET isbn = $1, numero_edicion = $2, fecha_publicacion = $3, libroid = $4, proveedorid = $5, total_prestamos = $6, promedio_rating = $7, archivo_pdfbyte = COALESCE($8, archivo_pdfbyte)
-             WHERE edicionid = $9 RETURNING *`,
-            [isbn, numero_edicion, fecha_publicacion, libroid, proveedorid, total_prestamos, promedio_rating, pdfData, id]
+            `UPDATE ediciones SET isbn = $1, numero_edicion = $2, fecha_publicacion = $3, libroid = (SELECT libroid FROM libros WHERE titulo = $4), proveedorid = (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $5), archivo_pdfbyte = COALESCE($6, archivo_pdfbyte)
+             WHERE edicionid = $7 RETURNING *`,
+            [isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfUrl, id]
         );
         return result.rows[0];
     } catch (error) {
