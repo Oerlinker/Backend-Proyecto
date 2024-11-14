@@ -59,57 +59,24 @@ const getEdicionByISBN = async (isbn) => {
     }
 };
 
-const updateEdicion = async ({isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfFile}) => {
+const updateEdicion = async (id, { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfFile }) => {
     try {
-
-        const pdfData = pdfFile ? pdfFile.buffer : null;
-
-
-        const fields = [];
-        const values = [];
-        let idx = 1;
-
-
-        if (fecha_publicacion) {
-            fields.push(`fecha_publicacion = $${idx}`);
-            values.push(fecha_publicacion);
-            idx++;
-        }
-        if (titulo_libro) {
-            fields.push(`libroid = (SELECT libroid FROM libros WHERE titulo = $${idx})`);
-            values.push(titulo_libro);
-            idx++;
-        }
-        if (nombre_proveedor) {
-            fields.push(`proveedorid = (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $${idx})`);
-            values.push(nombre_proveedor);
-            idx++;
-        }
-        if (pdfData) {
-            fields.push(`archivo_pdfbyte = $${idx}`);
-            values.push(pdfData);
-            idx++;
-        }
-
-
-        if (fields.length === 0) {
-            throw new Error('No fields to update');
-        }
-
-
-        values.push(isbn, numero_edicion);
-        const query = `
-            UPDATE ediciones
-            SET ${fields.join(', ')}
-            WHERE isbn = $${idx} AND numero_edicion = $${idx + 1}
-            RETURNING *
-        `;
-
-
-        const result = await pool.query(query, values);
+        const pdfData = pdfFile ? pdfFile.buffer : null; // Guardar el archivo en formato binario
+        const result = await pool.query(
+            `UPDATE ediciones
+             SET isbn = $1,
+                 numero_edicion = $2,
+                 fecha_publicacion = $3,
+                 libroid = (SELECT libroid FROM libros WHERE titulo = $4),
+                 proveedorid = (SELECT proveedorid FROM proveedores WHERE nombre_proveedor = $5),
+                 archivo_pdfbyte = $6
+             WHERE edicionid = $7
+             RETURNING *`,
+            [isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor, pdfData, id]
+        );
         return result.rows[0];
     } catch (error) {
-        console.error('Error updating the edition', error);
+        console.error('Error actualizando la edición', error);
         throw error;
     }
 };
@@ -128,6 +95,6 @@ module.exports = {
     createEdicion,
     getEdiciones,
     getEdicionByISBN,
-    updateEdicion,
-    deleteEdicion
+    deleteEdicion,
+    updateEdicion
 };
