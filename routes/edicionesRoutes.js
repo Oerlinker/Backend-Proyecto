@@ -14,7 +14,7 @@ router.get('/ediciones', verificarTokenYRol([2,3,4]), getEdicion);
 router.get('/ediciones/:id', verificarTokenYRol([2,3,4]), getEdicionByIdController);
 router.put('/ediciones/:id', verificarTokenYRol([4]), updEdicion);
 router.delete('/ediciones/:id', verificarTokenYRol([4]), delEdicion);
-router.get('/ediciones/download-pdf/:id', verificarTokenYRol([2,3,4]), getPdf);
+router.get('/ediciones/download-pdf/:id', verificarTokenYRol([2]), getPdf);
 
 
 // Ruta para subir el archivo PDF de una edición

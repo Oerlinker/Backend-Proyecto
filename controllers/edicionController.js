@@ -1,6 +1,4 @@
 const { createEdicion, getEdiciones, getEdicionByISBN, updateEdicion, deleteEdicion } = require('../models/edicionModel');
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' }); //almacenamiento
 
 const addEdicion = async (req, res) => {
     const { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor } = req.body;
