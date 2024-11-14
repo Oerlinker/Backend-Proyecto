@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const { addEdicion,getEdicion,getEdicionByIdController,updEdicion,delEdicion,getPdf} = require('../controllers/edicionController');
 const verificarTokenYRol = require("../middleware/verificarTokenYRol");
 
