@@ -129,6 +129,5 @@ module.exports = {
     getEdiciones,
     getEdicionByISBN,
     updateEdicion,
-    deleteEdicion,
-    uploadPdf
+    deleteEdicion
 };
