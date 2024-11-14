@@ -9,7 +9,7 @@ const s3 = new AWS.S3();
 const uploadPdf = async (pdfFile) => {
     const fileContent = fs.readFileSync(pdfFile.path);
     const params = {
-        Bucket: 'your-bucket-name', // El nombre de tu bucket de S3
+        Bucket: 'biblioteca-virtual-pdfs', // El nombre de tu bucket de S3
         Key: `ediciones/${Date.now()}_${pdfFile.name}`, // El nombre del archivo PDF
         Body: fileContent,
         ContentType: pdfFile.mimetype,
