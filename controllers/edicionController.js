@@ -1,16 +1,28 @@
 const { createEdicion, getEdiciones, getEdicionByISBN, updateEdicion, deleteEdicion } = require('../models/edicionModel');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); //almacenamiento
+
 
 const addEdicion = async (req, res) => {
     const { isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor } = req.body;
+    const archivo_pdf = req.file; // Obtener el archivo PDF del formulario
+
     try {
-        const nuevaEdicion = await createEdicion({ isbn, numero_edicion, fecha_publicacion, titulo_libro, nombre_proveedor });
+        const nuevaEdicion = await createEdicion({
+            isbn,
+            numero_edicion,
+            fecha_publicacion,
+            titulo_libro,
+            nombre_proveedor,
+            archivo_pdf
+        });
         res.status(201).json({
-            message: 'Edicion agregada con exito',
+            message: 'Edición agregada con éxito',
             body: nuevaEdicion
         });
     } catch (error) {
-        console.error('Error agregando la edicion', error);
-        res.status(500).json({ error: 'Error agregando la edicion' });
+        console.error('Error agregando la edición', error);
+        res.status(500).json({ error: 'Error agregando la edición' });
     }
 };
 

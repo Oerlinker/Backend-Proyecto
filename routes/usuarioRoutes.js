@@ -9,7 +9,7 @@ const verificarTokenYRol = require("../middleware/verificarTokenYRol");
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/create-subscription', createSubscriptionAndMember);
-
+router.get('/users/prestamos/activos/:miembroid', prestamosActivos);
 
 //protected routes
 router.get('/users',verificarTokenYRol([4]), getUser);
