@@ -194,16 +194,19 @@ const updateUserCorreo = async (req, res) => {
 };
 
 const createSubscriptionAndMember = async (req, res) => {
-    const {usuarioid, nombre, telefono, direccion, carrera, semestre, registro} = req.body;
+    const { usuarioid, nombre, telefono, direccion, carrera, semestre, registro } = req.body;
     try {
 
-        // Insertar datos en la tabla miembros
-        const memberData = {nombre, telefono, direccion, carrera, semestre, registro, usuarioid};
+        const validRegistro = await pool.query('SELECT * FROM valid_registros WHERE registro_number = $1 AND is_used = FALSE', [registro]);
+        if (validRegistro.rowCount === 0) {
+            return res.status(400).json({ message: 'Registro invalido o en uso.' });
+        }
+
+
+        const memberData = { nombre, telefono, direccion, carrera, semestre, registro, usuarioid };
         await createMember(memberData);
 
 
-
-        // Crear suscripción
         const subscriptionData = {
             usuarioid,
             fecha_inicio: new Date(),
@@ -211,12 +214,13 @@ const createSubscriptionAndMember = async (req, res) => {
             estado: 'Activa'
         };
         await createSubscription(subscriptionData);
+
         const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        await logUserActivity(usuarioid, `Nuevo suscriptor/miembro`, userIp);
-        res.status(201).json({message: 'Suscripción y miembro creados con éxito'});
+        await logUserActivity(usuarioid, 'Nuevo suscriptor/miembro', userIp);
+        res.status(201).json({ message: 'Suscripción y miembro creados con éxito' });
     } catch (error) {
         console.error('Error creando la suscripción y miembro:', error);
-        res.status(500).json({message: 'Error creando la suscripción y miembro', error});
+        res.status(500).json({ message: 'Error creando la suscripción y miembro', error });
     }
 };
 
