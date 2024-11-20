@@ -2,6 +2,7 @@ const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, upda
 const { logUserActivity } = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
 const { tokenSing } = require('../helpers/generateToken');
+const pool = require('../db');
 //hacer una reseña
 const hacerReseña = async (req, res) => {
     const { id, miembroid, edicionid, libroid, calificacion, comentario } = req.body;
