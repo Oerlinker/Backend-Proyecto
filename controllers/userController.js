@@ -197,7 +197,12 @@ const updateUserCorreo = async (req, res) => {
 const createSubscriptionAndMember = async (req, res) => {
     const { usuarioid, nombre, telefono, direccion, carrera, semestre, registro } = req.body;
 
+    console.log('Request payload:', req.body); // Log the entire request payload
+
     try {
+        if (!usuarioid) {
+            return res.status(400).json({ message: 'Usuario ID es requerido.' });
+        }
 
         const validRegistro = await pool.query(
             'SELECT registro_id FROM valid_registros WHERE registro_number = $1 AND is_used = FALSE',
@@ -208,13 +213,10 @@ const createSubscriptionAndMember = async (req, res) => {
             return res.status(400).json({ message: 'Registro inválido o en uso.' });
         }
 
-
         const registro_id = validRegistro.rows[0].registro_id;
-
 
         const memberData = { nombre, telefono, direccion, carrera, semestre, registro, usuarioid };
         await createMember(memberData);
-
 
         const subscriptionData = {
             usuarioid,
@@ -225,9 +227,7 @@ const createSubscriptionAndMember = async (req, res) => {
         };
         await createSubscription(subscriptionData);
 
-
         await pool.query('UPDATE valid_registros SET is_used = TRUE WHERE registro_id = $1', [registro_id]);
-
 
         const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         await logUserActivity(usuarioid, 'Nuevo suscriptor/miembro', userIp);
