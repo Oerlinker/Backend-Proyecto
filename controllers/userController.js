@@ -277,8 +277,7 @@ module.exports = {
    prestamosActivos,
    prestamosDevolver, 
    hacerReseña,
-    getMember,
-    getByidController
+    getMember
 
 };
 

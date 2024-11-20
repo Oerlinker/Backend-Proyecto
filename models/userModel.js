@@ -183,6 +183,5 @@ module.exports = {
     getPrestamosActivos,
     devolverPrestamo,
     setReseña,
-    getMembers,
-    getuserbyid
+    getMembers
 };
