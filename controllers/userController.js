@@ -196,12 +196,20 @@ const updateUserCorreo = async (req, res) => {
 
 const createSubscriptionAndMember = async (req, res) => {
     const { usuarioid, nombre, telefono, direccion, carrera, semestre, registro } = req.body;
+
     try {
 
-        const validRegistro = await pool.query('SELECT * FROM valid_registros WHERE registro_number = $1 AND is_used = FALSE', [registro]);
+        const validRegistro = await pool.query(
+            'SELECT registro_id FROM valid_registros WHERE registro_number = $1 AND is_used = FALSE',
+            [registro]
+        );
+
         if (validRegistro.rowCount === 0) {
-            return res.status(400).json({ message: 'Registro invalido o en uso.' });
+            return res.status(400).json({ message: 'Registro inválido o en uso.' });
         }
+
+
+        const registro_id = validRegistro.rows[0].registro_id;
 
 
         const memberData = { nombre, telefono, direccion, carrera, semestre, registro, usuarioid };
@@ -212,12 +220,18 @@ const createSubscriptionAndMember = async (req, res) => {
             usuarioid,
             fecha_inicio: new Date(),
             fecha_fin: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-            estado: 'Activa'
+            estado: 'Activa',
+            registro_id,
         };
         await createSubscription(subscriptionData);
 
+
+        await pool.query('UPDATE valid_registros SET is_used = TRUE WHERE registro_id = $1', [registro_id]);
+
+
         const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         await logUserActivity(usuarioid, 'Nuevo suscriptor/miembro', userIp);
+
         res.status(201).json({ message: 'Suscripción y miembro creados con éxito' });
     } catch (error) {
         console.error('Error creando la suscripción y miembro:', error);

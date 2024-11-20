@@ -120,11 +120,11 @@ const updateCorreo = async (userId, newCorreo) => {
 };
 
 const createSubscription = async (subscriptionData) => {
-    const { usuarioid, fecha_inicio, fecha_fin, estado } = subscriptionData;
+    const { usuarioid, fecha_inicio, fecha_fin, estado, registro_id } = subscriptionData;
     try {
         await pool.query(
-            'INSERT INTO subscripciones (usuarioid, fecha_inicio, fecha_fin, estado) VALUES ($1, $2, $3, $4)',
-            [usuarioid, fecha_inicio, fecha_fin, estado]
+            'INSERT INTO subscripciones (usuarioid, fecha_inicio, fecha_fin, estado, registro_id) VALUES ($1, $2, $3, $4, $5)',
+            [usuarioid, fecha_inicio, fecha_fin, estado, registro_id]
         );
     } catch (error) {
         console.error('Error creando la suscripción', error);
