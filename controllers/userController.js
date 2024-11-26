@@ -1,4 +1,4 @@
-const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription, getPrestamosActivos, devolverPrestamo, setReseña,getMembers,getuserbyid } = require('../models/userModel');
+const { createUser, getUserByEmail,getUsers,updateUserRole, updatePassword, updateName, updateCorreo,createMember,createSubscription, getPrestamosActivos, devolverPrestamo, setReseña,getMembers,getMembersbyID,updateMemberByID} = require('../models/userModel');
 const { logUserActivity } = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
 const { tokenSing } = require('../helpers/generateToken');
@@ -246,23 +246,35 @@ const getMember = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error obteniendo los miembros', error });
     }
-}
-const getByidController = async (req, res) => {
-    const { id } = req.params;
-
-    if (!id || isNaN(parseInt(id))) {
-        return res.status(400).json({ message: 'ID invalido' });
+};
+const getMemberbyID = async (req, res) => {
+    try{
+        const memberID = req.params.id || req.user.id;
+        const member = await getMembersbyID(memberID);
+        if(!member){
+            return res.status(404).json({message: 'Miembro no encontrado'});
+        }
+        res.status(200).json(member);
+    } catch (error) {
+        res.status(500).json({ message: 'Error obteniendo el miembro', error });
     }
+};
+
+const updateMembersByID = async (req, res) => {
+    const { id } = req.params;
+    const { nombre, telefono, direccion, carrera, semestre, registro } = req.body;
 
     try {
-        const user = await getuserbyid(id);
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+        const updatedMember = await updateMemberByID(id, nombre, telefono, direccion, carrera, semestre, registro);
+
+        if (!updatedMember) {
+            return res.status(404).json({ message: 'Miembro no encontrado' });
         }
-        res.status(200).json(user);
+
+        res.status(200).json({ message: 'Miembro actualizado con éxito', member: updatedMember });
     } catch (error) {
-        console.error('Error obteniendo usuario por ID:', error);
-        res.status(500).json({ error: 'Error obteniendo usuario por  ID' });
+        console.error('Error al actualizar el miembro:', error);
+        res.status(500).json({ message: 'Error al actualizar el miembro', error });
     }
 };
 module.exports = {
@@ -277,7 +289,9 @@ module.exports = {
    prestamosActivos,
    prestamosDevolver, 
    hacerReseña,
-    getMember
+    getMember,
+    getMemberbyID,
+    updateMembersByID
 
 };
 

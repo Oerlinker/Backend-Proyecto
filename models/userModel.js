@@ -39,7 +39,7 @@ const devolverPrestamo = async (prestamoid) => {
 };
 
 // Función para crear un nuevo usuario
-const createUser = async ({ nombre, email, password, rol }) => {
+const createUser = async ({nombre, email, password, rol}) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
         const result = await pool.query(
@@ -120,7 +120,7 @@ const updateCorreo = async (userId, newCorreo) => {
 };
 
 const createSubscription = async (subscriptionData) => {
-    const { usuarioid, fecha_inicio, fecha_fin, estado, registro_id } = subscriptionData;
+    const {usuarioid, fecha_inicio, fecha_fin, estado, registro_id} = subscriptionData;
     try {
         await pool.query(
             'INSERT INTO subscripciones (usuarioid, fecha_inicio, fecha_fin, estado, registro_id) VALUES ($1, $2, $3, $4, $5)',
@@ -133,7 +133,7 @@ const createSubscription = async (subscriptionData) => {
 };
 
 const createMember = async (memberData) => {
-    const { nombre, telefono, direccion, carrera, semestre, registro, usuarioid } = memberData;
+    const {nombre, telefono, direccion, carrera, semestre, registro, usuarioid} = memberData;
     try {
         await pool.query(
             'INSERT INTO miembros (nombre, telefono, direccion, carrera, semestre, registro, usuarioid) VALUES ($1, $2, $3, $4, $5, $6, $7)',
@@ -159,17 +159,30 @@ const getMembers = async () => {
     }
 };
 
-const getuserbyid = async (id) => {
+const getMembersbyID = async (id) => {
     try {
-        const result = await pool.query('SELECT * FROM Usuario WHERE usuarioid = $1', [id]);
+        const result = await pool.query('SELECT * FROM Miembros WHERE miembroid = $1', [id]);
         return result.rows[0];
     } catch (error) {
-        console.error('Error obteniendo el usuario', error);
+        console.error('Error obteniendo el miembro', error);
         throw error;
     }
 };
 
-
+const updateMemberByID = async (id, data) => {
+    const {nombre, telefono, direccion, carrera, semestre, registro} = data;
+    try {
+        const result = await pool.query
+        {
+            'UPDATE miembros SET nombre = $1, telefono=$2, direccion=$3, carrera=$4, semestre=$5, registro=$6 WHERE miembroid = $7 RETURNING *;',
+                [nombre, telefono, direccion, carrera, semestre, registro, id]
+        };
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error actualizando el miembro', error);
+        throw error;
+    }
+};
 module.exports = {
     createUser,
     createSubscription,
@@ -183,5 +196,7 @@ module.exports = {
     getPrestamosActivos,
     devolverPrestamo,
     setReseña,
-    getMembers
+    getMembers,
+    getMembersbyID,
+    updateMemberByID
 };

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, updateUserName, updateUserPassword, createSubscriptionAndMember, prestamosActivos, prestamosDevolver, hacerReseña,
-    getMember
+    getMember,getMemberbyID,updateMembersByID
 } = require('../controllers/userController');
 
 const verificarTokenYRol = require("../middleware/verificarTokenYRol");
@@ -21,6 +21,8 @@ router.post('/users/prestamos/devolver/:prestamoid',verificarTokenYRol([2,3,4]),
 router.post('/users/review',verificarTokenYRol([2,3,4]), hacerReseña);
 router.get('/users/members/',verificarTokenYRol([3,4]), getMember);
 
-
+//routes for members
+router.get('/users/members/:id',verificarTokenYRol([2]),getMemberbyID);
+router.put('/users/members/:id',verificarTokenYRol([2]),updateMembersByID);
 
 module.exports = router;
