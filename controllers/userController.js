@@ -271,10 +271,10 @@ const updateMembersByID = async (req, res) => {
             return res.status(404).json({ message: 'Miembro no encontrado' });
         }
 
-        res.status(200).json({ message: 'Miembro actualizado con éxito', member: updatedMember });
+        res.status(200).json({ message: 'Datos de miembro actualizado con éxito', member: updatedMember });
     } catch (error) {
-        console.error('Error al actualizar el miembro:', error);
-        res.status(500).json({ message: 'Error al actualizar el miembro', error });
+        console.error('Error al actualizar datos de miembro:', error);
+        res.status(500).json({ message: 'Error al actualizar datos de miembro', error });
     }
 };
 module.exports = {
