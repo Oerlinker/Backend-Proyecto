@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, updateUserName, updateUserPassword, createSubscriptionAndMember, prestamosActivos, prestamosDevolver, hacerReseña,
-    getMember,getMemberbyID,updateMembersByID
+    getMember,getMemberbyID,updateMemberNameByID,
+    updateMemberTelefonoByID,
+    updateMemberDireccionByID,
+    updateMemberCarreraByID,
+    updateMemberSemestreByID,
+    updateMemberRegistroByID
 } = require('../controllers/userController');
 
 const verificarTokenYRol = require("../middleware/verificarTokenYRol");
@@ -20,9 +25,15 @@ router.get('/users/prestamos/activos/:miembroid',verificarTokenYRol([2,3,4]), pr
 router.post('/users/prestamos/devolver/:prestamoid',verificarTokenYRol([2,3,4]), prestamosDevolver);
 router.post('/users/review',verificarTokenYRol([2,3,4]), hacerReseña);
 router.get('/users/members/',verificarTokenYRol([3,4]), getMember);
+router.get('/users/members/:id',verificarTokenYRol([2,4]),getMemberbyID);
 
-//routes for members
-router.get('/users/members/:id',verificarTokenYRol([2]),getMemberbyID);
-router.put('/users/members/:id',verificarTokenYRol([2]),updateMembersByID);
+//routes for updating members
+router.put('/users/members/name/:id',verificarTokenYRol([2]),updateMemberNameByID);
+router.put('/users/members/telefono/:id',verificarTokenYRol([2]),updateMemberTelefonoByID);
+router.put('/users/members/direccion/:id',verificarTokenYRol([2]),updateMemberDireccionByID);
+router.put('/users/members/carrera/:id',verificarTokenYRol([2]),updateMemberCarreraByID);
+router.put('/users/members/semestre/:id',verificarTokenYRol([2]),updateMemberSemestreByID);
+router.put('/users/members/registro/:id',verificarTokenYRol([2]),updateMemberRegistroByID);
+
 
 module.exports = router;

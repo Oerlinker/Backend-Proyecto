@@ -161,28 +161,97 @@ const getMembers = async () => {
 
 const getMembersbyID = async (id) => {
     try {
-        const result = await pool.query('SELECT * FROM Miembros WHERE miembroid = $1', [id]);
+        const result = await pool.query(`
+            SELECT m.miembroid, m.nombre, m.registro, u.correo_electronico AS correo
+            FROM Miembros m
+            JOIN Usuario u ON m.usuarioid = u.usuarioid
+            WHERE m.miembroid = $1
+        `, [id]);
         return result.rows[0];
     } catch (error) {
-        console.error('Error obteniendo el miembro', error);
+        console.error('Error obteniendo el miembro por ID:', error);
         throw error;
     }
 };
 
-const updateMemberByID = async (id, data) => {
-    const {nombre, telefono, direccion, carrera, semestre, registro} = data;
+const updateMemberName = async (id, nombre) => {
     try {
-        const result = await pool.query
-        {
-            'UPDATE miembros SET nombre = $1, telefono=$2, direccion=$3, carrera=$4, semestre=$5, registro=$6 WHERE miembroid = $7 RETURNING *;',
-                [nombre, telefono, direccion, carrera, semestre, registro, id]
-        };
+        const result = await pool.query(
+            'UPDATE miembros SET nombre = $1 WHERE miembroid = $2 RETURNING *;',
+            [nombre, id]
+        );
         return result.rows[0];
     } catch (error) {
-        console.error('Error actualizando el miembro', error);
+        console.error('Error actualizando el nombre del miembro', error);
         throw error;
     }
 };
+
+const updateMemberTelefono = async (id, telefono) => {
+    try {
+        const result = await pool.query(
+            'UPDATE miembros SET telefono = $1 WHERE miembroid = $2 RETURNING *;',
+            [telefono, id]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error actualizando el teléfono del miembro', error);
+        throw error;
+    }
+};
+
+const updateMemberDireccion = async (id, direccion) => {
+    try {
+        const result = await pool.query(
+            'UPDATE miembros SET direccion = $1 WHERE miembroid = $2 RETURNING *;',
+            [direccion, id]
+        );
+          return result.row[0];
+    } catch (error){
+        console.error('Error actualizando la dirección del miembro', error);
+        throw error;
+    }
+};
+
+const updateMemberCarrera = async (id, carrera) => {
+    try {
+        const result = await pool.query(
+            'UPDATE miembros SET carrera = $1 WHERE miembroid = $2 RETURNING *;',
+            [carrera, id]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error actualizando la carrera del miembro', error);
+        throw error;
+    }
+};
+
+const updateMemberSemestre = async (id, semestre) => {
+    try {
+        const result = await pool.query(
+            'UPDATE miembros SET semestre = $1 WHERE miembroid = $2 RETURNING *;',
+            [semestre, id]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error actualizando el semestre del miembro', error);
+        throw error;
+    }
+};
+
+const updateMemberRegistro = async (id, registro) => {
+    try {
+        const result = await pool.query(
+            'UPDATE miembros SET registro = $1 WHERE miembroid = $2 RETURNING *;',
+            [registro, id]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error actualizando el registro del miembro', error);
+        throw error;
+    }
+};
+
 module.exports = {
     createUser,
     createSubscription,
@@ -198,5 +267,11 @@ module.exports = {
     setReseña,
     getMembers,
     getMembersbyID,
-    updateMemberByID
+    updateMemberName,
+    updateMemberTelefono,
+    updateMemberDireccion,
+    updateMemberCarrera,
+    updateMemberSemestre,
+    updateMemberRegistro
+
 };
