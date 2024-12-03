@@ -31,10 +31,13 @@ const extenderPrestamo = async (req, res) => {
     const { prestamoid } = req.params;
     try {
         const prestamo = await prestamoPorId(prestamoid);
+        console.log("Fecha de devolución:", prestamo.fecha_devolucion);
         const nuevaFecha = new Date(prestamo.fecha_devolucion);
         nuevaFecha.setDate(nuevaFecha.getDate() + 7);
+        const maxFecha = new Date(prestamo.fecha_devolucion);
+        maxFecha.setDate(maxFecha.getDate() + 7);
 
-        if (nuevaFecha > new Date(prestamo.fecha_devolucion).setDate(prestamo.fecha_devolucion.getDate() + 7)) {
+        if (nuevaFecha > maxFecha) {
             return res.status(400).json({ message: 'La extensión excede el límite permitido.' });
         }
 
