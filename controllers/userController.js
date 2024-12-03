@@ -26,7 +26,7 @@ const {tokenSing} = require('../helpers/generateToken');
 const pool = require('../db');
 const { prestamoPorId } = require('../models/prestamoModel');
 const crypto = require('crypto');
-const transporter = require('../config/nodemailer');
+const transporter = require('../Config/nodemailer');
 
 
 const extenderPrestamo = async (req, res) => {
