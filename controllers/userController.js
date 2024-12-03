@@ -431,7 +431,7 @@ const forgotPassword = async (req, res) => {
     try {
         const resetPasswordUrl = `https://biblioteca-frontend-production.up.railway.app/reset-password?email=${encodeURIComponent(email)}`;
 
-        const { data, error } = await resend.emails.send({
+        const { data, error } = await resend.email.send({
             from: `noreply.bibliotecaalejandria.com`,
             to: [email],
             subject: 'Solicitud de cambio de contraseña',
