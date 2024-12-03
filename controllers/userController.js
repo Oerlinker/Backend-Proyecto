@@ -27,7 +27,8 @@ const pool = require('../db');
 const { prestamoPorId } = require('../models/prestamoModel');
 const crypto = require('crypto');
 const transporter = require('../Config/nodemailer');
-
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const extenderPrestamo = async (req, res) => {
     const { prestamoid } = req.params;
@@ -430,18 +431,21 @@ const forgotPassword = async (req, res) => {
 
         const resetPasswordUrl = `https://biblioteca-frontend-production.up.railway.app/reset-password?email=${encodeURIComponent(email)}`;
 
-        const mailOptions = {
-            to: email,
-            from: process.env.EMAIL_USER,
+        const { data, error } = await resend.emails.send({
+            from: `Biblioteca <${process.env.EMAIL_USER}>`,
+            to: [email],
             subject: 'Solicitud de cambio de contraseña',
-            text: `Recibiste este correo porque tú (o alguien más) solicitó cambiar la contraseña de tu cuenta.\n\n` +
-                `Por favor, haz clic en el siguiente enlace o pégalo en tu navegador para completar el proceso:\n\n` +
-                `${resetPasswordUrl}\n\n` +
-                `Si no solicitaste este cambio, por favor ignora este correo y tu contraseña permanecerá igual.\n`
-        };
+            html: `<p>Recibiste este correo porque tú (o alguien más) solicitó cambiar la contraseña de tu cuenta.</p>
+                   <p>Por favor, haz clic en el siguiente enlace o pégalo en tu navegador para completar el proceso:</p>
+                   <a href="${resetPasswordUrl}">${resetPasswordUrl}</a>
+                   <p>Si no solicitaste este cambio, por favor ignora este correo y tu contraseña permanecerá igual.</p>`
+        });
 
-        await transporter.sendMail(mailOptions);
-        res.status(200).json({ message: 'Correo de cambio de contraseña enviado con éxito' });
+        if (error) {
+            return res.status(400).json({ error });
+        }
+
+        res.status(200).json({ message: 'Correo de cambio de contraseña enviado con éxito', data });
     } catch (error) {
         console.error('Error en forgotPassword:', error);
         res.status(500).json({ message: 'Error en forgotPassword', error });
