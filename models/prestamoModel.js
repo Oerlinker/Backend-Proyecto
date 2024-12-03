@@ -4,14 +4,15 @@ const { prestamo } = require('./libroModel');
 
 const prestamoPorId = async (prestamoid) => {
     try {
-        const prestamo = await pool.query(`
+        const result = await pool.query(`
             SELECT * 
             FROM prestamos
             WHERE prestamoid = $1
             `, [prestamoid]);
-        return prestamo.rows;
+        
+        return result.rows[0] || null;
     } catch (error) {
-        console.error('Error oteniendo el prestamo por id', error);
+        console.error('Error obteniendo el prestamo por id', error);
         throw error;
     }
 }
