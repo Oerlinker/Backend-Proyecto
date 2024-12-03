@@ -25,8 +25,6 @@ const bcrypt = require('bcryptjs');
 const {tokenSing} = require('../helpers/generateToken');
 const pool = require('../db');
 const { prestamoPorId } = require('../models/prestamoModel');
-const crypto = require('crypto');
-const transporter = require('../Config/nodemailer');
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -432,7 +430,7 @@ const forgotPassword = async (req, res) => {
         const resetPasswordUrl = `https://biblioteca-frontend-production.up.railway.app/reset-password?email=${encodeURIComponent(email)}`;
 
         const { data, error } = await resend.emails.send({
-            from: `Biblioteca <${process.env.EMAIL_USER}>`,
+            from: `noreply.bibliotecaalejandria.com`,
             to: [email],
             subject: 'Solicitud de cambio de contraseña',
             html: `<p>Recibiste este correo porque tú (o alguien más) solicitó cambiar la contraseña de tu cuenta.</p>
