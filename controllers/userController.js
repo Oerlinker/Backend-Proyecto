@@ -20,7 +20,6 @@ const {
     updateMemberSemestre,
     extensionPrestamo
 } = require('../models/userModel');
-const {prestamoPorId} = require('../models/prestamoModel');
 const {logUserActivity} = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
 const {tokenSing} = require('../helpers/generateToken');
