@@ -73,7 +73,7 @@ const createUser = async ({nombre, email, password, rol}) => {
 const getUserByEmail = async (email) => {
     try {
         console.log('Searching for user with email:', email);
-        const result = await pool.query('SELECT u.*, m.miembroid FROM Usuario u LEFT JOIN miembros m ON u.usuarioid = m.usuarioid WHERE correo_electronico = $1', [email]);
+        const result = await pool.query('SELECT * FROM Usuario WHERE correo_electronico = $1', [email]);
         console.log('Query result:', result.rows);
         return result.rows[0];
     } catch (error) {
