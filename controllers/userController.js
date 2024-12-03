@@ -38,7 +38,7 @@ const extenderPrestamo = async (req, res) => {
         // Verifica si la fecha de devolución es válida
         const fechaDevolucion = new Date(prestamo.fecha_devolucion);
         
-        if (isNaN(fechaDevolucion.getTime())) { // Si no es una fecha válida
+        if (isNaN(fechaDevolucion.getTime())) {
             return res.status(400).json({ message: 'Fecha de devolución inválida.' });
         }
 
