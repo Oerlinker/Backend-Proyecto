@@ -138,14 +138,9 @@ const loginUser = async (req, res) => {
         const token = tokenSing({
             id: user.usuarioid,
             miembroid: user.miembroid,
-            username: user.nombre_usuario,
+            nombre: user.nombre_usuario,
             correo: user.correo_electronico,
-            rol: user.rolid,
-            nombre: this.miembroid.nombre,
-            telefono: this.miembroid.telefono,
-            direccion: this.miembroid.direccion,
-            carrera: this.miembroid.carrera,
-            semestre: this.miembroid.semestre
+            rol: user.rolid
         }, '1h');
         console.log("Token generado:", token);
 
