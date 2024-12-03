@@ -18,7 +18,6 @@ const {
     updateMemberDireccion,
     updateMemberCarrera,
     updateMemberSemestre,
-    updateMemberRegistro,
     extensionPrestamo
 } = require('../models/userModel');
 const {prestamoPorId} = require('../models/prestamoModel');
@@ -139,9 +138,14 @@ const loginUser = async (req, res) => {
         const token = tokenSing({
             id: user.usuarioid,
             miembroid: user.miembroid,
-            nombre: user.nombre_usuario,
+            username: user.nombre_usuario,
             correo: user.correo_electronico,
-            rol: user.rolid
+            rol: user.rolid,
+            nombre: this.miembroid.nombre,
+            telefono: this.miembroid.telefono,
+            direccion: this.miembroid.direccion,
+            carrera: this.miembroid.carrera,
+            semestre: this.miembroid.semestre
         }, '1h');
         console.log("Token generado:", token);
 
@@ -402,24 +406,6 @@ const updateMemberSemestreByID = async (req, res) => {
     }
 };
 
-const updateMemberRegistroByID = async (req, res) => {
-    const {id} = req.params;
-    const {registro} = req.body;
-
-    try {
-        const updatedMember = await updateMemberRegistro(id, registro);
-
-        if (!updatedMember) {
-            return res.status(404).json({message: 'Miembro no encontrado'});
-        }
-
-        res.status(200).json({message: 'Registro actualizado con éxito', member: updatedMember});
-    } catch (error) {
-        console.error('Error al actualizar el registro del miembro:', error);
-        res.status(500).json({message: 'Error al actualizar el registro del miembro', error});
-    }
-};
-
 
 module.exports = {
     registerUser,
@@ -440,7 +426,6 @@ module.exports = {
     updateMemberDireccionByID,
     updateMemberCarreraByID,
     updateMemberSemestreByID,
-    updateMemberRegistroByID,
     extenderPrestamo
 
 };

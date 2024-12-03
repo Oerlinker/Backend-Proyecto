@@ -175,7 +175,7 @@ const getMembers = async () => {
 const getMembersbyID = async (id) => {
     try {
         const result = await pool.query(`
-            SELECT m.miembroid, m.nombre, m.registro, u.correo_electronico AS correo
+            SELECT m.miembroid, m.nombre, m.registro, u.correo_electronico
             FROM Miembros m
             JOIN Usuario u ON m.usuarioid = u.usuarioid
             WHERE m.miembroid = $1
@@ -252,19 +252,6 @@ const updateMemberSemestre = async (id, semestre) => {
     }
 };
 
-const updateMemberRegistro = async (id, registro) => {
-    try {
-        const result = await pool.query(
-            'UPDATE miembros SET registro = $1 WHERE miembroid = $2 RETURNING *;',
-            [registro, id]
-        );
-        return result.rows[0];
-    } catch (error) {
-        console.error('Error actualizando el registro del miembro', error);
-        throw error;
-    }
-};
-
 module.exports = {
     createUser,
     createSubscription,
@@ -285,6 +272,5 @@ module.exports = {
     updateMemberDireccion,
     updateMemberCarrera,
     updateMemberSemestre,
-    updateMemberRegistro,
     extensionPrestamo
 };
