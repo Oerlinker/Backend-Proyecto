@@ -19,9 +19,7 @@ const {
     updateMemberDireccionByID,
     updateMemberCarreraByID,
     updateMemberSemestreByID,
-    extenderPrestamo,
-    forgotPassword,
-    resetPassword
+    extenderPrestamo
 } = require('../controllers/userController');
 
 const verificarTokenYRol = require("../middleware/verificarTokenYRol");
@@ -29,8 +27,7 @@ const verificarTokenYRol = require("../middleware/verificarTokenYRol");
 router.post('/register', registerUser);
 router.post('/create-subscription', createSubscriptionAndMember);
 router.get('/users/prestamos/activos/:miembroid', prestamosActivos);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+
 
 //protected routes
 router.post('/login', loginUser);
