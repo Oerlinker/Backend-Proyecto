@@ -33,11 +33,18 @@ const extenderPrestamo = async (req, res) => {
         const prestamo = await prestamoPorId(prestamoid);
         console.log("Fecha de devolución original:", prestamo.fecha_devolucion);
 
-        const nuevaFecha = new Date(prestamo.fecha_devolucion);
+        // Verifica si la fecha de devolución es válida
+        const fechaDevolucion = new Date(prestamo.fecha_devolucion);
+        
+        if (isNaN(fechaDevolucion.getTime())) { // Si no es una fecha válida
+            return res.status(400).json({ message: 'Fecha de devolución inválida.' });
+        }
+
+        const nuevaFecha = new Date(fechaDevolucion);
         nuevaFecha.setDate(nuevaFecha.getDate() + 7); // Extiende 7 días la fecha
 
         // Si la nueva fecha es posterior a la fecha de devolución permitida, retorna error
-        const fechaMaxima = new Date(prestamo.fecha_devolucion);
+        const fechaMaxima = new Date(fechaDevolucion);
         fechaMaxima.setDate(fechaMaxima.getDate() + 7); // Límite de extensión a 7 días
 
         if (nuevaFecha > fechaMaxima) {
