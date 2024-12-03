@@ -422,7 +422,11 @@ const updateMemberSemestreByID = async (req, res) => {
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
     try {
-        const user = await getUserByEmail(email);
+        console.log('Searching for user with email:', email);
+        const result = await pool.query('SELECT * FROM usuario WHERE correo_electronico = $1', [email]);
+        const user = result.rows[0];
+        console.log('Query result:', result.rows);
+
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
