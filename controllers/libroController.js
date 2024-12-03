@@ -9,7 +9,8 @@ const {
     getLibroxCategoria,
     getBookDetails,
     buscarLibrosAvanzado,
-    getReseñasbyLibro
+    getReseñasbyLibro,
+    getLibrosDetalles
 } = require('../models/libroModel');
 const {logUserActivity} = require('../models/userActivityLogModel');
 
