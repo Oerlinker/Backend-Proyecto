@@ -421,6 +421,10 @@ const updateMemberSemestreByID = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
+    if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+    }
+
     try {
         console.log('Searching for user with email:', email);
         const result = await pool.query('SELECT * FROM usuario WHERE correo_electronico = $1', [email]);

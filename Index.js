@@ -32,7 +32,7 @@ app.use(cors({
 }));
 // Aumentamos el límite de tamaño de los datos JSON
 app.use(express.json({ limit: '50mb' }));  // Aumentar el límite de datos JSON a 50MB
-app.use(express.urlencoded({ limit: '50mb', extended: true }));  // Aumentar el límite para formularios URL-encoded
+app.use(express.urlencoded({ extended: true }));
 
 // Rutas
 app.use('/api', logActivity('viewed ediciones'), edicionesRoutes);
