@@ -160,32 +160,15 @@ const getReseñas = async (req, res) => {
     }
 };
 
-const getLibrosDetalles = async (req, res) => {
-    const query = `
-        SELECT 
-            l.titulo AS nombre_libro,
-            a.nombre AS nombre_autor,
-            e.numero_edicion AS numero_edicion,
-            c.nombre_categoria AS nombre_categoria
-        FROM 
-            libros l
-        JOIN 
-            autor a ON l.autorid = a.autorid
-        JOIN 
-            ediciones e ON l.libroid = e.libroid
-        JOIN 
-            categorias c ON l.categoriaid = c.categoriaid;
-    `;
-
+const getLibrosDetallesController = async (req, res) => {
     try {
-        const result = await pool.query(query);
-        res.json(result.rows);
+        const librosDetalles = await getLibrosDetalles();
+        res.json(librosDetalles);
     } catch (error) {
         console.error('Error obteniendo los detalles de los libros:', error);
-        res.status(500).json({error: 'Error obteniendo los detalles de los libros'});
+        res.status(500).json({ error: 'Error obteniendo los detalles de los libros' });
     }
 };
-
 
 module.exports = {
     adLibro,
@@ -198,5 +181,5 @@ module.exports = {
     searchLibros,
     buscarLibros,
     getReseñas,
-    getLibrosDetalles
+    getLibrosDetallesController
 };

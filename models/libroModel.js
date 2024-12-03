@@ -194,6 +194,33 @@ const getReseñasbyLibro = async (libroid) => {
     }
 };
 
+
+const getLibrosDetalles = async () => {
+    const query = `
+        SELECT 
+            l.titulo AS nombre_libro,
+            a.nombre AS nombre_autor,
+            e.numero_edicion AS numero_edicion,
+            c.nombre_categoria AS nombre_categoria
+        FROM 
+            libros l
+        JOIN 
+            autor a ON l.autorid = a.autorid
+        JOIN 
+            ediciones e ON l.libroid = e.libroid
+        JOIN 
+            categorias c ON l.categoriaid = c.categoriaid;
+    `;
+
+    try {
+        const result = await pool.query(query);
+        return result.rows;
+    } catch (error) {
+        console.error('Error obteniendo los detalles de los libros:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     createLibro,
     getLibros,
@@ -206,7 +233,8 @@ module.exports = {
     getLibroxCategoria,
     getBookDetails,
     buscarLibrosAvanzado,
-    getReseñasbyLibro
+    getReseñasbyLibro,
+    getLibrosDetalles
 };
 
 
