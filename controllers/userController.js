@@ -427,15 +427,6 @@ const forgotPassword = async (req, res) => {
     }
 
     try {
-        console.log('Searching for user with email:', email);
-        const result = await pool.query('SELECT * FROM usuario WHERE correo_electronico = $1', [email]);
-        const user = result.rows[0];
-        console.log('Query result:', result.rows);
-
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
         const resetPasswordUrl = `https://biblioteca-frontend-production.up.railway.app/reset-password?email=${encodeURIComponent(email)}`;
 
         const { data, error } = await resend.emails.send({
