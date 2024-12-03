@@ -28,7 +28,7 @@ const { prestamoPorId } = require('../models/prestamoModel');
 
 
 const extenderPrestamo = async (req, res) => {
-    const {prestamoid} = req.body;
+    const { prestamoid } = req.params;
     try {
         const prestamo = await prestamoPorId(prestamoid);
         const nuevaFecha = new Date(prestamo.fecha_devolucion);
