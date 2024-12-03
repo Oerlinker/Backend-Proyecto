@@ -165,7 +165,7 @@ const getMembersbyID = async (id) => {
             SELECT m.miembroid, m.nombre, m.registro, u.correo_electronico
             FROM Miembros m
             JOIN Usuario u ON m.usuarioid = u.usuarioid
-            WHERE u.usuarioid = $1
+            WHERE m.miembroid = $1
         `, [id]);
         return result.rows[0];
     } catch (error) {
@@ -177,7 +177,7 @@ const getMembersbyID = async (id) => {
 const updateMemberName = async (id, nombre) => {
     try {
         const result = await pool.query(
-            'UPDATE miembros SET nombre = $1 WHERE usuarioid= $2 RETURNING *;',
+            'UPDATE miembros SET nombre = $1 WHERE miembroid = $2 RETURNING *;',
             [nombre, id]
         );
         return result.rows[0];
@@ -190,7 +190,7 @@ const updateMemberName = async (id, nombre) => {
 const updateMemberTelefono = async (id, telefono) => {
     try {
         const result = await pool.query(
-            'UPDATE miembros SET telefono = $1 WHERE usuarioid = $2 RETURNING *;',
+            'UPDATE miembros SET telefono = $1 WHERE miembroid = $2 RETURNING *;',
             [telefono, id]
         );
         return result.rows[0];
@@ -203,7 +203,7 @@ const updateMemberTelefono = async (id, telefono) => {
 const updateMemberDireccion = async (id, direccion) => {
     try {
         const result = await pool.query(
-            'UPDATE miembros SET direccion = $1 WHERE usuarioid = $2 RETURNING *;',
+            'UPDATE miembros SET direccion = $1 WHERE miembroid = $2 RETURNING *;',
             [direccion, id]
         );
         return result.row[0];
@@ -216,7 +216,7 @@ const updateMemberDireccion = async (id, direccion) => {
 const updateMemberCarrera = async (id, carrera) => {
     try {
         const result = await pool.query(
-            'UPDATE miembros SET carrera = $1 WHERE usuarioid = $2 RETURNING *;',
+            'UPDATE miembros SET carrera = $1 WHERE miembroid = $2 RETURNING *;',
             [carrera, id]
         );
         return result.rows[0];
@@ -229,7 +229,7 @@ const updateMemberCarrera = async (id, carrera) => {
 const updateMemberSemestre = async (id, semestre) => {
     try {
         const result = await pool.query(
-            'UPDATE miembros SET semestre = $1 WHERE usuarioid = $2 RETURNING *;',
+            'UPDATE miembros SET semestre = $1 WHERE miembroid = $2 RETURNING *;',
             [semestre, id]
         );
         return result.rows[0];
