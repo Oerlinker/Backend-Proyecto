@@ -178,7 +178,7 @@ const getMembers = async () => {
 const getMembersbyID = async (id) => {
     try {
         const result = await pool.query(`
-            SELECT m.miembroid, m.nombre, m.registro, u.correo_electronico
+            SELECT m.miembroid, m.nombre, m.telefono, m.direccion, m.carrera, m.semestre, m.registro, u.correo_electronico as correo
             FROM Miembros m
             JOIN Usuario u ON m.usuarioid = u.usuarioid
             WHERE m.miembroid = $1
