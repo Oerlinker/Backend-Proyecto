@@ -428,11 +428,7 @@ const forgotPassword = async (req, res) => {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        const token = crypto.randomBytes(20).toString('hex');
-        const resetPasswordUrl = `https://biblioteca-frontend-production.up.railway.app/reset-password/${token}`;
-
-        await pool.query('INSERT INTO reset_password_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)',
-            [user.usuarioid, token, new Date(Date.now() + 3600000)]);
+        const resetPasswordUrl = `https://biblioteca-frontend-production.up.railway.app/reset-password?email=${encodeURIComponent(email)}`;
 
         const mailOptions = {
             to: email,
@@ -453,20 +449,17 @@ const forgotPassword = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-    const { token } = req.params;
+    const { email } = req.query;
     const { password } = req.body;
 
     try {
-        const result = await pool.query('SELECT * FROM reset_password_tokens WHERE token = $1 AND expires_at > $2',
-            [token, Date.now()]);
-
-        if (result.rowCount === 0) {
-            return res.status(400).json({ message: 'Token inválido o expirado' });
+        const user = await getUserByEmail(email);
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        await updatePassword(result.rows[0].user_id, hashedPassword);
-        await pool.query('DELETE FROM reset_password_tokens WHERE token = $1', [token]);
+        await updatePassword(user.usuarioid, hashedPassword);
 
         res.status(200).json({ message: 'Contraseña actualizada con éxito' });
     } catch (error) {
@@ -474,6 +467,7 @@ const resetPassword = async (req, res) => {
         res.status(500).json({ message: 'Error en resetPassword', error });
     }
 };
+
 module.exports = {
     registerUser,
     loginUser,
