@@ -18,7 +18,8 @@ const {
     updateMemberTelefonoByID,
     updateMemberDireccionByID,
     updateMemberCarreraByID,
-    updateMemberSemestreByID
+    updateMemberSemestreByID,
+    extenderPrestamo
 } = require('../controllers/userController');
 
 const verificarTokenYRol = require("../middleware/verificarTokenYRol");
