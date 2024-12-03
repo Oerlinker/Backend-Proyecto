@@ -26,7 +26,7 @@ const upload = multer({
 
 // Middleware
 app.use(cors({
-    origin: 'https://biblioteca-frontend-production.up.railway.app/', // Permitir solicitudes de cualquier origen
+    origin: 'https://biblioteca-frontend-production.up.railway.app', // Permitir solicitudes de cualquier origen
     methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
