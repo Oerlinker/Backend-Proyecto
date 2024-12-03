@@ -314,16 +314,14 @@ const getMember = async (req, res) => {
     }
 };
 const getMemberbyID = async (req, res) => {
+    const { id } = req.params;
+
     try {
-        const memberID = req.params.id || req.user.miembroid;
-        const member = await getMembersbyID(memberID);
-        if (!member) {
-            return res.status(404).json({ message: 'Miembro no encontrado' });
-        }
-        res.status(200).json(member);
+        const member = await getMembersbyID(id);
+        res.json(member);
     } catch (error) {
         console.error('Error obteniendo el miembro:', error);
-        res.status(500).json({ message: 'Error obteniendo el miembro', error });
+        res.status(500).json({ error: 'Error obteniendo el miembro' });
     }
 };
 

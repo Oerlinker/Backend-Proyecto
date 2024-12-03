@@ -72,12 +72,10 @@ const createUser = async ({nombre, email, password, rol}) => {
 // Función para buscar usuario por email
 const getUserByEmail = async (email) => {
     try {
-        console.log('Searching for user with email:', email);
-        const result = await pool.query('SELECT * FROM usuario WHERE correo_electronico = $1', [email]);
-        console.log('Query result:', result.rows);
+        const result = await pool.query('SELECT u.*, m.miembroid FROM Usuario u LEFT JOIN miembros m ON u.usuarioid = m.usuarioid WHERE correo_electronico = $1', [email]);
         return result.rows[0];
     } catch (error) {
-        console.error('Error searching for user by email:', error);
+        console.error('Error buscando el usuario por email', error);
         throw error;
     }
 };
@@ -177,15 +175,18 @@ const getMembers = async () => {
     }
 };
 
+// Ensure the ID is a valid integer before querying the database
 const getMembersbyID = async (id) => {
+    if (!id || isNaN(parseInt(id, 10))) {
+        throw new Error('Invalid ID parameter');
+    }
+
+    const query = 'SELECT * FROM members WHERE memberid = $1';
+    const values = [parseInt(id, 10)];
+
     try {
-        const result = await pool.query(`
-            SELECT m.miembroid, m.nombre, m.telefono, m.direccion, m.carrera, m.semestre, m.registro, u.correo_electronico as correo
-            FROM Miembros m
-            JOIN Usuario u ON m.usuarioid = u.usuarioid
-            WHERE m.miembroid = $1
-        `, [id]);
-        return result.rows[0];
+        const result = await pool.query(query, values);
+        return result.rows;
     } catch (error) {
         console.error('Error obteniendo el miembro por ID:', error);
         throw error;
