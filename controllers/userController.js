@@ -31,24 +31,30 @@ const extenderPrestamo = async (req, res) => {
     const { prestamoid } = req.params;
     try {
         const prestamo = await prestamoPorId(prestamoid);
-        console.log("Fecha de devolución:", prestamo.fecha_devolucion);
-        const nuevaFecha = new Date(prestamo.fecha_devolucion);
-        nuevaFecha.setDate(nuevaFecha.getDate() + 7);
-        const maxFecha = new Date(prestamo.fecha_devolucion);
-        maxFecha.setDate(maxFecha.getDate() + 7);
+        console.log("Fecha de devolución original:", prestamo.fecha_devolucion);
 
-        if (nuevaFecha > maxFecha) {
+        const nuevaFecha = new Date(prestamo.fecha_devolucion);
+        nuevaFecha.setDate(nuevaFecha.getDate() + 7); // Extiende 7 días la fecha
+
+        // Si la nueva fecha es posterior a la fecha de devolución permitida, retorna error
+        const fechaMaxima = new Date(prestamo.fecha_devolucion);
+        fechaMaxima.setDate(fechaMaxima.getDate() + 7); // Límite de extensión a 7 días
+
+        if (nuevaFecha > fechaMaxima) {
             return res.status(400).json({ message: 'La extensión excede el límite permitido.' });
         }
 
-        const prestamoNuevaFecha = await extensionPrestamo (prestamoid, nuevaFecha);
+        // Convertir la fecha a formato YYYY-MM-DD
+        const nuevaFechaFormatted = nuevaFecha.toISOString().split('T')[0];
+
+        const prestamoNuevaFecha = await extensionPrestamo(prestamoid, nuevaFechaFormatted);
         res.status(200).json(prestamoNuevaFecha);
 
     } catch (error) {
-        console.error('Error al extender el prestamo:', error);
-        res.status(500).json({ message: 'Error al extender el prestamo.'});
+        console.error('Error al extender el préstamo:', error);
+        res.status(500).json({ message: 'Error al extender el préstamo.' });
     }
-}
+};
 //hacer una reseña
 const hacerReseña = async (req, res) => {
     const {id, miembroid, edicionid, libroid, calificacion, comentario} = req.body;

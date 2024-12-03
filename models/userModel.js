@@ -1,16 +1,20 @@
 const pool = require('../db');
 const bcrypt = require('bcryptjs');
 
-const extensionPrestamo = async (prestamoid,nuevaFecha) => {
-    const query = `
-        UPDATE prestamos
-        SET fecha_devolucion = $1
-        WHERE prestamoid = $2
-        RETURNING *;
-    `;
-    const values = [nuevaFecha, prestamoid];
-    const result = await pool.query(query, values);
-    return result.rows[0];
+const extensionPrestamo = async (prestamoid, nuevaFecha) => {
+    try {
+        const result = await pool.query(
+            `UPDATE prestamos
+             SET fecha_devolucion = $1
+             WHERE prestamoid = $2
+             RETURNING prestamoid, fecha_devolucion`,
+            [nuevaFecha, prestamoid]
+        );
+        return result.rows[0]; // Retorna el prestamo actualizado
+    } catch (error) {
+        console.error('Error al actualizar la fecha de devolución:', error);
+        throw new Error('Error al actualizar la fecha de devolución.');
+    }
 };
 
 //hacer reseña
