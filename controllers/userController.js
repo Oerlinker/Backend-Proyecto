@@ -18,12 +18,36 @@ const {
     updateMemberDireccion,
     updateMemberCarrera,
     updateMemberSemestre,
-    updateMemberRegistro
+    updateMemberRegistro,
+    extensionPrestamo
 } = require('../models/userModel');
+const {prestamoPorId} = require('../models/prestamoModel');
 const {logUserActivity} = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
 const {tokenSing} = require('../helpers/generateToken');
 const pool = require('../db');
+const { prestamoPorId } = require('../models/prestamoModel');
+
+
+const extenderPrestamo = async (req, res) => {
+    const {prestamoid} = req.body;
+    try {
+        const prestamo = await prestamoPorId(prestamoid);
+        const nuevaFecha = new Date(prestamo.fecha_devolucion);
+        nuevaFecha.setDate(nuevaFecha.getDate + 7);
+
+        if (nuevaFechaDevolucion > new Date(prestamo.fecha_devolucion).setDate(prestamo.fecha_devolucion.getDate() + 7)) {
+            return res.status(400).json({ message: 'La extensión excede el límite permitido.' });
+        }
+
+        const prestamoNuevaFecha = await extensionPrestamo (prestamoid, nuevaFecha);
+        res.status(200).json(prestamoNuevaFecha);
+
+    } catch (error) {
+        console.error('Error al extender el prestamo:', error);
+        res.status(500).json({ message: 'Error al extender el prestamo.'});
+    }
+}
 //hacer una reseña
 const hacerReseña = async (req, res) => {
     const {id, miembroid, edicionid, libroid, calificacion, comentario} = req.body;
@@ -416,8 +440,8 @@ module.exports = {
     updateMemberDireccionByID,
     updateMemberCarreraByID,
     updateMemberSemestreByID,
-    updateMemberRegistroByID
-
+    updateMemberRegistroByID,
+    extenderPrestamo
 
 };
 

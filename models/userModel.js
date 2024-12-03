@@ -1,6 +1,19 @@
 const pool = require('../db');
 const bcrypt = require('bcryptjs');
 
+const extensionPrestamo = async (prestamoid,nuevaFecha) => {
+    try {
+        await pool.query(`UPDATE prestamos 
+                          SET fecha_devolucion = $1
+                          WHERE prestamoid = $2
+                          RETURNING *
+                          `, [nuevaFecha, prestamoid]);
+    } catch (error) {
+        console.error('Error modificando la fecha de devolución', error);
+        throw error;
+    }
+};
+
 //hacer reseña
 const setReseña = async (miembroid, edicionid, libroid, calificacion, comentario) => {
     const query = `
@@ -272,5 +285,6 @@ module.exports = {
     updateMemberDireccion,
     updateMemberCarrera,
     updateMemberSemestre,
-    updateMemberRegistro
+    updateMemberRegistro,
+    extensionPrestamo
 };

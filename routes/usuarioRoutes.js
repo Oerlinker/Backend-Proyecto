@@ -6,7 +6,8 @@ const { registerUser, loginUser, getUser, updateUserRoles, updateUserCorreo, upd
     updateMemberDireccionByID,
     updateMemberCarreraByID,
     updateMemberSemestreByID,
-    updateMemberRegistroByID
+    updateMemberRegistroByID,
+    extenderPrestamo
 } = require('../controllers/userController');
 
 const verificarTokenYRol = require("../middleware/verificarTokenYRol");
@@ -35,5 +36,6 @@ router.put('/users/members/carrera/:id',verificarTokenYRol([2]),updateMemberCarr
 router.put('/users/members/semestre/:id',verificarTokenYRol([2]),updateMemberSemestreByID);
 router.put('/users/members/registro/:id',verificarTokenYRol([2]),updateMemberRegistroByID);
 
+router.post('/users/prestamos/solicitar-extension/:prestamoid', verificarTokenYRol([2,3,4]), extenderPrestamo);
 
 module.exports = router;

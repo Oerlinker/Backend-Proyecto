@@ -1,4 +1,20 @@
 const pool = require('../db');
+const { prestamo } = require('./libroModel');
+
+
+const prestamoPorId = async (prestamoid) => {
+    try {
+        const prestamo = await pool.query(`
+            SELECT * 
+            FROM prestamos
+            WHERE prestamoid = $1
+            `, [prestamoid]);
+        return prestamo.rows;
+    } catch (error) {
+        console.error('Error oteniendo el prestamo por id', error);
+        throw error;
+    }
+}
 
 //se usa para obtener las ediciones disponibles segun el libro mandado
 const verificarDisponibilidadLibro = async (libroid) => {
@@ -69,5 +85,6 @@ module.exports = {
     crearPrestamo,
     verificarDisponibilidadLibro,
     getEdiciones,
-    verificarDisponibilidadEdicion
+    verificarDisponibilidadEdicion,
+    prestamoPorId
 };
