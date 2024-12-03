@@ -474,7 +474,6 @@ const resetPassword = async (req, res) => {
         res.status(500).json({ message: 'Error en resetPassword', error });
     }
 };
-
 module.exports = {
     registerUser,
     loginUser,
