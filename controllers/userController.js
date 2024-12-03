@@ -432,7 +432,7 @@ const forgotPassword = async (req, res) => {
         const resetPasswordUrl = `https://biblioteca-frontend-production.up.railway.app/reset-password/${token}`;
 
         await pool.query('INSERT INTO reset_password_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)',
-            [user.usuarioid, token, Date.now() + 3600000]);
+            [user.usuarioid, token, new Date(Date.now() + 3600000)]);
 
         const mailOptions = {
             to: email,
@@ -496,7 +496,6 @@ module.exports = {
     extenderPrestamo,
     forgotPassword,
     resetPassword
-
 };
 
 

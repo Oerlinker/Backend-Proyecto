@@ -31,6 +31,7 @@ router.post('/create-subscription', createSubscriptionAndMember);
 router.get('/users/prestamos/activos/:miembroid', prestamosActivos);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
+
 //protected routes
 router.post('/login', loginUser);
 router.get('/users', verificarTokenYRol([4]), getUser);
@@ -50,7 +51,6 @@ router.put('/users/members/telefono/:id', verificarTokenYRol([2]), updateMemberT
 router.put('/users/members/direccion/:id', verificarTokenYRol([2]), updateMemberDireccionByID);
 router.put('/users/members/carrera/:id', verificarTokenYRol([2]), updateMemberCarreraByID);
 router.put('/users/members/semestre/:id', verificarTokenYRol([2]), updateMemberSemestreByID);
-
 router.post('/users/prestamos/solicitar-extension/:prestamoid', verificarTokenYRol([2,3,4]), extenderPrestamo);
 
 module.exports = router;
