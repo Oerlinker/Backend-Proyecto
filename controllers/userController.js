@@ -420,6 +420,8 @@ const updateMemberSemestreByID = async (req, res) => {
 
 
 const forgotPassword = async (req, res) => {
+    console.log('Request body:', req.body); // Log the entire request body
+
     const { email } = req.body;
     if (!email) {
         console.log('Email is missing in the request body');
@@ -440,6 +442,7 @@ const forgotPassword = async (req, res) => {
         });
 
         if (error) {
+            console.log('Error sending email:', error);
             return res.status(400).json({ error });
         }
 
