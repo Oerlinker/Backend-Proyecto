@@ -222,7 +222,7 @@ const updateMemberDireccion = async (id, direccion) => {
             'UPDATE miembros SET direccion = $1 WHERE miembroid = $2 RETURNING *;',
             [direccion, id]
         );
-        return result.row[0];
+        return result.rows[0];
     } catch (error){
         console.error('Error actualizando la dirección del miembro', error);
         throw error;

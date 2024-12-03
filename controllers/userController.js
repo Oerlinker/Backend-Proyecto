@@ -25,6 +25,8 @@ const bcrypt = require('bcryptjs');
 const {tokenSing} = require('../helpers/generateToken');
 const pool = require('../db');
 const { prestamoPorId } = require('../models/prestamoModel');
+const crypto = require('crypto');
+const transporter = require('../config/nodemailer');
 
 
 const extenderPrestamo = async (req, res) => {
@@ -418,6 +420,61 @@ const updateMemberSemestreByID = async (req, res) => {
 };
 
 
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await getUserByEmail(email);
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        const token = crypto.randomBytes(20).toString('hex');
+        const resetPasswordUrl = `https://biblioteca-frontend-production.up.railway.app/reset-password/${token}`;
+
+        await pool.query('INSERT INTO reset_password_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)',
+            [user.usuarioid, token, Date.now() + 3600000]);
+
+        const mailOptions = {
+            to: email,
+            from: process.env.EMAIL_USER,
+            subject: 'Solicitud de cambio de contraseña',
+            text: `Recibiste este correo porque tú (o alguien más) solicitó cambiar la contraseña de tu cuenta.\n\n` +
+                `Por favor, haz clic en el siguiente enlace o pégalo en tu navegador para completar el proceso:\n\n` +
+                `${resetPasswordUrl}\n\n` +
+                `Si no solicitaste este cambio, por favor ignora este correo y tu contraseña permanecerá igual.\n`
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: 'Correo de cambio de contraseña enviado con éxito' });
+    } catch (error) {
+        console.error('Error en forgotPassword:', error);
+        res.status(500).json({ message: 'Error en forgotPassword', error });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    try {
+        const result = await pool.query('SELECT * FROM reset_password_tokens WHERE token = $1 AND expires_at > $2',
+            [token, Date.now()]);
+
+        if (result.rowCount === 0) {
+            return res.status(400).json({ message: 'Token inválido o expirado' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await updatePassword(result.rows[0].user_id, hashedPassword);
+        await pool.query('DELETE FROM reset_password_tokens WHERE token = $1', [token]);
+
+        res.status(200).json({ message: 'Contraseña actualizada con éxito' });
+    } catch (error) {
+        console.error('Error en resetPassword:', error);
+        res.status(500).json({ message: 'Error en resetPassword', error });
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
@@ -437,7 +494,9 @@ module.exports = {
     updateMemberDireccionByID,
     updateMemberCarreraByID,
     updateMemberSemestreByID,
-    extenderPrestamo
+    extenderPrestamo,
+    forgotPassword,
+    resetPassword
 
 };
 
