@@ -170,6 +170,21 @@ const getLibrosDetallesController = async (req, res) => {
     }
 };
 
+const getBookDetailsController = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const bookDetails = await getBookDetails(id);
+        if (bookDetails) {
+            res.json(bookDetails);
+        } else {
+            res.status(404).json({ error: 'Book not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching book details:', error);
+        res.status(500).json({ error: 'Error fetching book details' });
+    }
+};
+
 module.exports = {
     adLibro,
     getLibro,
@@ -181,5 +196,6 @@ module.exports = {
     searchLibros,
     buscarLibros,
     getReseñas,
-    getLibrosDetallesController
+    getLibrosDetallesController,
+    getBookDetailsController
 };

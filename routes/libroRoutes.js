@@ -5,7 +5,8 @@ const {
     updLibro,
     delLibro,
     buscarLibros,
-    getLibrosDetallesController
+    getLibrosDetallesController,
+    getBookDetailsController
 
 } = require('../controllers/libroController');
 const libroController = require('../controllers/libroController');
@@ -18,7 +19,7 @@ router.get('/libros/:id', libroController.getLibroById);
 router.get('/api/api/categorias', libroController.categorias);
 router.get('/search', buscarLibros);
 router.get('/review/libros/:id', libroController.getReseñas);
-router.get('/libros-detalles',getLibrosDetallesController);
+router.get('/libros-detalles',getBookDetailsController);
 
 //protected routes
 router.post('/libros',verificarTokenYRol([4]), adLibro);
