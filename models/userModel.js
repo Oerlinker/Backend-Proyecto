@@ -175,18 +175,15 @@ const getMembers = async () => {
     }
 };
 
-// Ensure the ID is a valid integer before querying the database
 const getMembersbyID = async (id) => {
-    if (!id || isNaN(parseInt(id, 10))) {
-        throw new Error('Invalid ID parameter');
-    }
-
-    const query = 'SELECT * FROM members WHERE memberid = $1';
-    const values = [parseInt(id, 10)];
-
     try {
-        const result = await pool.query(query, values);
-        return result.rows;
+        const result = await pool.query(`
+            SELECT m.miembroid, m.nombre, m.telefono, m.direccion, m.carrera, m.semestre, m.registro, u.correo_electronico as correo
+            FROM Miembros m
+            JOIN Usuario u ON m.usuarioid = u.usuarioid
+            WHERE m.miembroid = $1
+        `, [id]);
+        return result.rows[0];
     } catch (error) {
         console.error('Error obteniendo el miembro por ID:', error);
         throw error;
@@ -225,7 +222,7 @@ const updateMemberDireccion = async (id, direccion) => {
             'UPDATE miembros SET direccion = $1 WHERE miembroid = $2 RETURNING *;',
             [direccion, id]
         );
-        return result.rows[0];
+        return result.row[0];
     } catch (error){
         console.error('Error actualizando la dirección del miembro', error);
         throw error;

@@ -25,8 +25,7 @@ const bcrypt = require('bcryptjs');
 const {tokenSing} = require('../helpers/generateToken');
 const pool = require('../db');
 const { prestamoPorId } = require('../models/prestamoModel');
-const { Resend } = require('resend');
-const resend = new Resend(process.env.RESEND_API_KEY);
+
 
 const extenderPrestamo = async (req, res) => {
     const { prestamoid } = req.params;
@@ -37,7 +36,7 @@ const extenderPrestamo = async (req, res) => {
         // Verifica si la fecha de devolución es válida
         const fechaDevolucion = new Date(prestamo.fecha_devolucion);
         
-        if (isNaN(fechaDevolucion.getTime())) {
+        if (isNaN(fechaDevolucion.getTime())) { // Si no es una fecha válida
             return res.status(400).json({ message: 'Fecha de devolución inválida.' });
         }
 
@@ -314,14 +313,16 @@ const getMember = async (req, res) => {
     }
 };
 const getMemberbyID = async (req, res) => {
-    const { id } = req.params;
-
     try {
-        const member = await getMembersbyID(id);
-        res.json(member);
+        const memberID = req.params.id || req.user.miembroid;
+        const member = await getMembersbyID(memberID);
+        if (!member) {
+            return res.status(404).json({ message: 'Miembro no encontrado' });
+        }
+        res.status(200).json(member);
     } catch (error) {
         console.error('Error obteniendo el miembro:', error);
-        res.status(500).json({ error: 'Error obteniendo el miembro' });
+        res.status(500).json({ message: 'Error obteniendo el miembro', error });
     }
 };
 
@@ -417,60 +418,6 @@ const updateMemberSemestreByID = async (req, res) => {
 };
 
 
-const forgotPassword = async (req, res) => {
-    console.log('Request body:', req.body); // Log the entire request body
-
-    const { email } = req.body;
-    if (!email) {
-        console.log('Email is missing in the request body');
-        return res.status(400).json({ message: 'Email is required' });
-    }
-
-    try {
-        const resetPasswordUrl = `https://biblioteca-frontend-production.up.railway.app/reset-password?email=${encodeURIComponent(email)}`;
-
-        const { data, error } = await resend.email.send({
-            from: `noreply.bibliotecaalejandria.com`,
-            to: [email],
-            subject: 'Solicitud de cambio de contraseña',
-            html: `<p>Recibiste este correo porque tú (o alguien más) solicitó cambiar la contraseña de tu cuenta.</p>
-                   <p>Por favor, haz clic en el siguiente enlace o pégalo en tu navegador para completar el proceso:</p>
-                   <a href="${resetPasswordUrl}">${resetPasswordUrl}</a>
-                   <p>Si no solicitaste este cambio, por favor ignora este correo y tu contraseña permanecerá igual.</p>`
-        });
-
-        if (error) {
-            console.log('Error sending email:', error);
-            return res.status(400).json({ error });
-        }
-
-        res.status(200).json({ message: 'Correo de cambio de contraseña enviado con éxito', data });
-    } catch (error) {
-        console.error('Error en forgotPassword:', error);
-        res.status(500).json({ message: 'Error en forgotPassword', error });
-    }
-};
-
-const resetPassword = async (req, res) => {
-    const { email } = req.query;
-    const { password } = req.body;
-
-    try {
-        const user = await getUserByEmail(email);
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await updatePassword(user.usuarioid, hashedPassword);
-
-        res.status(200).json({ message: 'Contraseña actualizada con éxito' });
-    } catch (error) {
-        console.error('Error en resetPassword:', error);
-        res.status(500).json({ message: 'Error en resetPassword', error });
-    }
-};
-
 module.exports = {
     registerUser,
     loginUser,
@@ -490,9 +437,8 @@ module.exports = {
     updateMemberDireccionByID,
     updateMemberCarreraByID,
     updateMemberSemestreByID,
-    extenderPrestamo,
-    forgotPassword,
-    resetPassword
+    extenderPrestamo
+
 };
 
 
