@@ -17,8 +17,7 @@ const {
     updateMemberTelefono,
     updateMemberDireccion,
     updateMemberCarrera,
-    updateMemberSemestre,
-    updateMemberRegistro
+    updateMemberSemestre
 } = require('../models/userModel');
 const {logUserActivity} = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
@@ -378,24 +377,6 @@ const updateMemberSemestreByID = async (req, res) => {
     }
 };
 
-const updateMemberRegistroByID = async (req, res) => {
-    const {id} = req.params;
-    const {registro} = req.body;
-
-    try {
-        const updatedMember = await updateMemberRegistro(id, registro);
-
-        if (!updatedMember) {
-            return res.status(404).json({message: 'Miembro no encontrado'});
-        }
-
-        res.status(200).json({message: 'Registro actualizado con éxito', member: updatedMember});
-    } catch (error) {
-        console.error('Error al actualizar el registro del miembro:', error);
-        res.status(500).json({message: 'Error al actualizar el registro del miembro', error});
-    }
-};
-
 
 module.exports = {
     registerUser,
@@ -415,8 +396,7 @@ module.exports = {
     updateMemberTelefonoByID,
     updateMemberDireccionByID,
     updateMemberCarreraByID,
-    updateMemberSemestreByID,
-    updateMemberRegistroByID
+    updateMemberSemestreByID
 
 
 };

@@ -239,19 +239,6 @@ const updateMemberSemestre = async (id, semestre) => {
     }
 };
 
-const updateMemberRegistro = async (id, registro) => {
-    try {
-        const result = await pool.query(
-            'UPDATE miembros SET registro = $1 WHERE miembroid = $2 RETURNING *;',
-            [registro, id]
-        );
-        return result.rows[0];
-    } catch (error) {
-        console.error('Error actualizando el registro del miembro', error);
-        throw error;
-    }
-};
-
 module.exports = {
     createUser,
     createSubscription,
@@ -271,6 +258,5 @@ module.exports = {
     updateMemberTelefono,
     updateMemberDireccion,
     updateMemberCarrera,
-    updateMemberSemestre,
-    updateMemberRegistro
+    updateMemberSemestre
 };
