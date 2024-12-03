@@ -30,7 +30,7 @@ router.post('/register', registerUser);
 router.post('/create-subscription', createSubscriptionAndMember);
 router.get('/users/prestamos/activos/:miembroid', prestamosActivos);
 router.post('/forgot-password', forgotPassword);
-router.post('/reset-password/:token', resetPassword);
+router.post('/reset-password', resetPassword);
 
 //protected routes
 router.post('/login', loginUser);
