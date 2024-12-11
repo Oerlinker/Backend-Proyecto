@@ -1,10 +1,10 @@
-const { reportarReseña,eliminarReseña,obtenerReseñasReportadas } = require('../models/reseñaModel');
+const { reportarReseña, eliminarReseña, obtenerReseñasReportadas } = require('../models/reseñaModel');
 
 const reportarReseñaController = async (req, res) => {
-    const { reseñaid } = req.body;
+    const { reseñaid, edicionid, libroid } = req.body;
 
     try {
-        const reporte = await reportarReseña(reseñaid);
+        const reporte = await reportarReseña(reseñaid, edicionid, libroid);
         res.status(200).json({ message: 'Reseña reportada con éxito', data: reporte });
     } catch (error) {
         console.error('Error reportando la reseña:', error);
@@ -23,10 +23,10 @@ const obtenerReseñasReportadasController = async (req, res) => {
 };
 
 const eliminarReseñaController = async (req, res) => {
-    const { reseñaid } = req.params;
+    const { reseñaid, edicionid, libroid } = req.params;
 
     try {
-        const reseñaEliminada = await eliminarReseña(reseñaid);
+        const reseñaEliminada = await eliminarReseña(reseñaid, edicionid, libroid);
         if (!reseñaEliminada) {
             return res.status(404).json({ message: 'Reseña no encontrada' });
         }
