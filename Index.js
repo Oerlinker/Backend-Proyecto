@@ -12,7 +12,6 @@ const prestamoRoutes = require('./routes/prestamoRoutes');
 const proveedorRoutes = require('./routes/proveedorRoutes');
 const logRoutes = require('./routes/logRoutes');
 const multer = require('multer');
-const resenaRoutes = require('./routes/resenaRoutes');
 dotenv.config();
 
 const app = express();
@@ -47,7 +46,7 @@ app.use('/api',logRoutes);
 app.use('/api', prestamoRoutes);
 app.use('/api', userRoutes);
 app.use('/api',edicionesRoutes);
-app.use('/api', resenaRoutes);
+
 
 
 
