@@ -16,7 +16,8 @@ const getFavoritosByUsuarioController = async (req, res) => {
         const favoritos = await getFavoritosByUsuario(usuarioid);
         res.status(200).json({ favoritos });
     } catch (error) {
-        res.status(500).json({ message: 'Error getting favoritos', error });
+        console.error('Error getting favoritos', error);
+        res.status(500).json({ message: 'Error getting favoritos', error: error.message });
     }
 };
 

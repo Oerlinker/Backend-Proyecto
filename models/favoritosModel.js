@@ -1,6 +1,6 @@
 const pool = require('../db');
 
-const addFavorito = async ({ usuarioid, libroid }) => {
+const addFavorito = async ({usuarioid, libroid}) => {
     try {
         const result = await pool.query(
             'INSERT INTO favoritos (usuarioid, libroid) VALUES ($1, $2) RETURNING *',
@@ -16,12 +16,11 @@ const addFavorito = async ({ usuarioid, libroid }) => {
 const getFavoritosByUsuario = async (usuarioid) => {
     try {
         const result = await pool.query(
-            `SELECT b.libroid, b.titulo, b.calificacion 
-             FROM favoritos f 
-             JOIN books b ON f.libroid = b.libroid 
-             WHERE f.usuarioid = $1`,
-            [usuarioid]
-        );
+            `SELECT f.favoritoid, f.libroid, l.titulo, f.fecha_agregado
+            FROM favoritos f
+           JOIN libros l ON f.libroid = l.libroid
+           WHERE f.usuarioid =  $1`
+            ,[usuarioid]);
         return result.rows;
     } catch (error) {
         console.error('Error getting favoritos', error);
