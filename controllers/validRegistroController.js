@@ -1,5 +1,5 @@
 
-const { createValidRegistro } = require('../models/validRegistroModel');
+const { createValidRegistro,getValidRegistros } = require('../models/validRegistroModel');
 
 const createValidRegistroController = async (req, res) => {
     const { registro_number } = req.body;
@@ -11,7 +11,17 @@ const createValidRegistroController = async (req, res) => {
     }
 };
 
+const getValidRegistrosController = async (req, res) => {
+    try {
+        const registros = await getValidRegistros();
+        res.status(200).json({ registros });
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting valid registros', error });
+    }
+}
+
 module.exports = {
     createValidRegistroController,
+    getValidRegistrosController
 };
 

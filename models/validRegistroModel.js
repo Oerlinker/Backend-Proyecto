@@ -13,6 +13,17 @@ const createValidRegistro = async ({ registro_number }) => {
     }
 };
 
+const getValidRegistros = async () => {
+    try {
+        const result = await pool.query('SELECT * FROM valid_registros');
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error getting the valid registros', error);
+        throw error;
+    }
+};
+
 module.exports = {
-    createValidRegistro
+    createValidRegistro,
+    getValidRegistros
 }
