@@ -13,6 +13,7 @@ const proveedorRoutes = require('./routes/proveedorRoutes');
 const logRoutes = require('./routes/logRoutes');
 const multer = require('multer');
 const validRegistroRoutes = require('./routes/validRegistroRoutes');
+const favoritosRoutes = require('./routes/favoritosRoutes');
 dotenv.config();
 
 const app = express();
@@ -48,6 +49,7 @@ app.use('/api', prestamoRoutes);
 app.use('/api', userRoutes);
 app.use('/api',edicionesRoutes);
 app.use('/api',validRegistroRoutes);
+app.use('/api',favoritosRoutes);
 
 
 
