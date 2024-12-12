@@ -20,7 +20,9 @@ const {
     updateMemberSemestre,
     extensionPrestamo,
     getReseñas,
-    reportarComentario
+    reportarComentario,
+    deleteReseña,
+    conservarComen
 
 } = require('../models/userModel');
 const {logUserActivity} = require('../models/userActivityLogModel');
@@ -28,6 +30,58 @@ const bcrypt = require('bcryptjs');
 const {tokenSing} = require('../helpers/generateToken');
 const pool = require('../db');
 const { prestamoPorId } = require('../models/prestamoModel');
+
+// Controlador para reservar un comentario
+const ConserComentctrl = async (req, res) => {
+    const { reseñaid } = req.body;
+    
+    if (!reseñaid) {
+        return res.status(400).json({ error: 'El ID del comentario es necesario' });
+    }
+    
+    try {
+        
+        const comentConser = await conservarComen(reseñaid);
+        
+        if (!comentConser) {
+            return res.status(404).json({ error: 'Comentario no encontrado o no se pudo conservar' });
+        }
+
+        
+        res.status(200).json({
+            message: 'Comentario conservado con éxito',
+            body: comentConser
+        });
+
+    } catch (error) {
+        console.error('Error conservando el comentario', error);
+        res.status(500).json({ error: 'Hubo un error al conservar el comentario' });
+    }
+};
+
+const delComentcontroller = async (req, res) => {
+    try {
+        const { reseñaid } = req.body;
+        
+        // Verificar si el reseñaid está presente
+        if (!reseñaid) {
+            return res.status(400).json({ error: 'El ID del comentario es necesario' });
+        }
+
+        const reporte = await deleteReseña(reseñaid);
+        if (reporte === 0) {
+            return res.status(404).json({ error: 'Comentario no encontrado' });
+        }
+
+        res.status(200).json({
+            message: 'Comentario eliminado con éxito',
+            body: { reseñaid }
+        });
+    } catch (error) {
+        console.error('Error al eliminar el comentario', error);
+        res.status(500).json({ error: 'Error eliminando el comentario' });
+    }
+};
 
 //ivan
 const ReportComment = async (req, res) => {
@@ -470,7 +524,9 @@ module.exports = {
     updateMemberSemestreByID,
     extenderPrestamo,
     ReportComment,
-    getReseñascontroller
+    getReseñascontroller,
+    ConserComentctrl,
+    delComentcontroller
 };
 
 

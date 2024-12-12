@@ -21,7 +21,9 @@ const {
     updateMemberSemestreByID,
     extenderPrestamo,
     ReportComment,
-    getReseñascontroller
+    getReseñascontroller,
+    delComentcontroller,
+    ConserComentctrl
 
 } = require('../controllers/userController');
 
@@ -45,7 +47,8 @@ router.post('/users/review', verificarTokenYRol([2, 3, 4]), hacerReseña);
 
 router.post('/users/report', verificarTokenYRol([2, 3, 4]), ReportComment);
 router.get('/users/getreport',getReseñascontroller);
-
+router.delete('/users/delComent',delComentcontroller);
+router.put('/users/ConserComent',ConserComentctrl);
 
 router.get('/users/members/', verificarTokenYRol([3, 4]), getMember);
 router.get('/users/members/:id', verificarTokenYRol([2, 4]), getMemberbyID);

@@ -2,6 +2,39 @@ const pool = require('../db');
 const bcrypt = require('bcryptjs');
 
 //ivan
+// Función para conservar un libro
+const conservarComen = async (reseñaid) => {
+    try {
+        // Realiza la consulta para actualizar el comentario
+        const result = await pool.query(
+            `UPDATE reseña SET reportada = false WHERE reseñaid = $1 RETURNING *;`,
+            [reseñaid]
+        );
+
+        if (result.rowCount === 0) {
+            return null;  // Si no se encontró ningún comentario con ese ID
+        }
+
+        // Si se encuentra el comentario, devuelve la fila actualizada
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error conservando el comentario', error);
+        throw error;
+    }
+};
+
+// Función para eliminar un libro
+const deleteReseña = async (reseñaid) => {
+    try {
+        const result = await pool.query('DELETE FROM reseña WHERE reseñaid = $1', [reseñaid]);
+        return result.rowCount;
+    } catch (error) {
+        console.error('Error eliminando el libro', error);
+        throw error;
+    }
+};
+
+//ivan
 const reportarComentario = async (reseñaid) => {
     try {
         const result = await pool.query(`update reseña set reportada = TRUE where reseñaid = $1;`, [reseñaid]);
@@ -300,5 +333,7 @@ module.exports = {
     updateMemberSemestre,
     extensionPrestamo,
     reportarComentario,
-    getReseñas
+    getReseñas,
+    conservarComen,
+    deleteReseña
 };
