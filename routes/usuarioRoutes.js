@@ -19,7 +19,10 @@ const {
     updateMemberDireccionByID,
     updateMemberCarreraByID,
     updateMemberSemestreByID,
-    extenderPrestamo
+    extenderPrestamo,
+    ReportComment,
+    getReseñascontroller
+
 } = require('../controllers/userController');
 
 const verificarTokenYRol = require("../middleware/verificarTokenYRol");
@@ -39,6 +42,11 @@ router.put('/users/update', verificarTokenYRol([4]), updateUserRoles);
 router.get('/users/prestamos/activos/:miembroid', verificarTokenYRol([2, 3, 4]), prestamosActivos);
 router.post('/users/prestamos/devolver/:prestamoid', verificarTokenYRol([2, 3, 4]), prestamosDevolver);
 router.post('/users/review', verificarTokenYRol([2, 3, 4]), hacerReseña);
+
+router.post('/users/report', verificarTokenYRol([2, 3, 4]), ReportComment);
+router.get('/users/getreport',getReseñascontroller);
+
+
 router.get('/users/members/', verificarTokenYRol([3, 4]), getMember);
 router.get('/users/members/:id', verificarTokenYRol([2, 4]), getMemberbyID);
 

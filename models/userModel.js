@@ -1,6 +1,29 @@
 const pool = require('../db');
 const bcrypt = require('bcryptjs');
 
+//ivan
+const reportarComentario = async (reseñaid) => {
+    try {
+        const result = await pool.query(`update reseña set reportada = TRUE where reseñaid = $1;`, [reseñaid]);
+        return result.rows[0];
+    } catch (error) {
+        throw error; // Lanza el error para que el controlador lo maneje.
+    }
+};
+const getReseñas = async () => {
+    const query = `SELECT reseña.*, miembros.nombre
+                    FROM reseña
+                    JOIN miembros
+                    ON reseña.miembroid = miembros.miembroid
+                    where reseña.reportada = true;`;
+    try {
+        const result = await pool.query(query);
+        return result.rows;
+    } catch (error) {
+        throw error; // Lanza el error para que el controlador lo maneje.
+    }
+};
+
 const extensionPrestamo = async (prestamoid, nuevaFecha) => {
     try {
         const result = await pool.query(
@@ -275,5 +298,7 @@ module.exports = {
     updateMemberDireccion,
     updateMemberCarrera,
     updateMemberSemestre,
-    extensionPrestamo
+    extensionPrestamo,
+    reportarComentario,
+    getReseñas
 };

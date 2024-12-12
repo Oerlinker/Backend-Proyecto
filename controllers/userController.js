@@ -18,7 +18,10 @@ const {
     updateMemberDireccion,
     updateMemberCarrera,
     updateMemberSemestre,
-    extensionPrestamo
+    extensionPrestamo,
+    getReseñas,
+    reportarComentario
+
 } = require('../models/userModel');
 const {logUserActivity} = require('../models/userActivityLogModel');
 const bcrypt = require('bcryptjs');
@@ -26,6 +29,34 @@ const {tokenSing} = require('../helpers/generateToken');
 const pool = require('../db');
 const { prestamoPorId } = require('../models/prestamoModel');
 
+//ivan
+const ReportComment = async (req, res) => {
+    try {
+        const {reseñaid} = req.body;
+        const reporte = await reportarComentario(reseñaid);
+        res.status(201).json({
+            message: 'comentario reportado con éxito',
+            body: reporte
+        });
+    } catch (error) {
+        console.error("Error en la búsqueda de libros:", error);
+        res.status(500).json({error: 'Error al buscar libros'});
+    }
+};
+
+//ivan
+const getReseñascontroller = async (req, res) => {
+    try {
+        const reseña = await getReseñas();
+        res.status(201).json({
+            message: 'reseñas obtenidas con éxito',
+            body: reseña
+        });
+    } catch (error) {
+        console.error("Error en la búsqueda de reseñas:", error);
+        res.status(500).json({error: 'Error al buscar reseñas'});
+    }
+};
 
 const extenderPrestamo = async (req, res) => {
     const { prestamoid } = req.params;
@@ -437,8 +468,9 @@ module.exports = {
     updateMemberDireccionByID,
     updateMemberCarreraByID,
     updateMemberSemestreByID,
-    extenderPrestamo
-
+    extenderPrestamo,
+    ReportComment,
+    getReseñascontroller
 };
 
 
