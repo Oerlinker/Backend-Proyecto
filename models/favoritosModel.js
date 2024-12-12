@@ -16,10 +16,11 @@ const addFavorito = async ({usuarioid, libroid}) => {
 const getFavoritosByUsuario = async (usuarioid) => {
     try {
         const result = await pool.query(
-            `SELECT f.favoritoid, f.libroid, l.titulo, f.fecha_agregado
+            `SELECT DISTINCT ON (f.libroid) f.favoritoid, f.libroid, l.titulo, f.fecha_agregado
             FROM favoritos f
-           JOIN libros l ON f.libroid = l.libroid
-           WHERE f.usuarioid =  $1`
+            JOIN libros l ON f.libroid = l.libroid
+            WHERE f.usuarioid = $1
+            ORDER BY f.libroid, f.fecha_agregado DESC;`
             ,[usuarioid]);
         return result.rows;
     } catch (error) {
